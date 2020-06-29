@@ -1,0 +1,40 @@
+.navbar.navbar-light{
+  margin: 0;
+  background-image: linear-gradient(90deg, #f8fbfb, #4bb0c2);
+  /* background-image: linear-gradient(-90deg, #f8fbfb, #bdc983); */
+  /* background-image: linear-gradient(-90deg, #f8fbfb, #fef898); */
+  /* background-image: linear-gradient(-90deg, #f8fbfb, #03d6fc); */
+  /* position: sticky;
+  top: -1px; */
+}
+
+.page-footer {
+  margin: 0;
+  background-image: linear-gradient(90deg, #f8fbfb, #4bb0c2);
+}
+
+.carousel {
+  position: absolute;
+  top: 0;
+  z-index: -100;
+  height: 100vh;
+  min-width: 100%;
+}
+
+.carousel img {
+  min-height: 100vh;
+  object-fit: cover;
+}
+
+.button-primary {
+  background: #00a3c1 !important;
+}
+
+.button-attention {
+  background: #e3622f !important;
+}
+
+#cardSection{
+  padding: 4rem 0;
+}
+
