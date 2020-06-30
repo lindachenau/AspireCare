@@ -122,7 +122,7 @@ export default function DrAppCard({drId, title, avatar, job, appointments}) {
           {expanded && 
             <>
               <MDBRow className={classes.bottomRowMargin}>
-                {bottomApps.map(day => <DaySlots key={day.date} slots={day.slots}/>)}
+                {bottomApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots}/>)}
               </MDBRow>
               <IconButton
                 className={classes.expandIconB}
