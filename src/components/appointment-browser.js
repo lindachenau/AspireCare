@@ -7,9 +7,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import moment from 'moment'
 import axios from "axios"
-// const bp_server = env.process.GATSBY_BP_SERVER
-// console.log(bp_server)
-const bp_server = "http://localhost:5000/get-appointments"
+import { doctors } from '../utils/booking-helper'
 
 const useStyles = makeStyles(theme => ({
   leftMiddle: {
@@ -28,36 +26,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const AppBrowser = () => {
+  const bp_server = process.env.GATSBY_BP_SERVER
   const classes = useStyles()
-
-  const doctors = {
-    "0001": {
-      title: "Dr Kai Yu",
-      avatar: require("../images/kai.jpg"),
-      job: "General Practitioner"
-    },
-    "0002": {
-      title: "Dr Dennis Yu",
-      avatar: require("../images/dennis.jpg"),
-      job: "General Practitioner"
-    },
-    "0003": {
-      title: "Dr Linda Chen",
-      avatar: require("../images/linda.jpg"),
-      job: "General Practitioner"
-    },
-    "0004": {
-      title: "Dr Michellenne Yu",
-      avatar: require("../images/mich.jpg"),
-      job: "General Practitioner"
-    }
-  }
-
   const [appData, setAppData] = useState([])
   const [startDate, setStartDate] = useState(new Date())
-  //narrow screen display 4 columns only. Need to check whether it works for iPad or not
-  const [numDays, setNumDays] = useState(window.innerWidth > 1024 ? 5 : 4)
-
+  const [numDays, setNumDays] = useState(0)
+  const [disablePrev, setDisablePrev] = useState(true)
+  
   useEffect(() => {
     const fetchApps = async () => {
       const config = {
@@ -78,6 +53,15 @@ const AppBrowser = () => {
 
   }, [startDate, numDays])
 
+  useEffect(() => {
+    //narrow screen display 4 columns only. Need to check whether it works for iPad or not
+    setNumDays(window.innerWidth >= 992 ? 5 : 4)
+  }, [])
+
+  useEffect(() => {
+    setDisablePrev(moment(startDate).format("YYYY-MM-DD") == moment(new Date()).format("YYYY-MM-DD"))
+  }, [startDate])
+
   const handlePrev = () => {
     setStartDate(new Date(startDate.getTime() - 86400000 * numDays))
   }
@@ -94,6 +78,7 @@ const AppBrowser = () => {
         className={classes.leftMiddle}
         color="primary"
         variant="contained"
+        disabled={disablePrev}
       >
         <ArrowBackIosIcon />
       </IconButton> 
@@ -108,11 +93,14 @@ const AppBrowser = () => {
       </IconButton>                
       <MDBRow>
         {appData.map(doctor => (
-          <DrAppCard key={doctor.bpId}
+          <DrAppCard 
+            key={doctor.bpId}
+            drId={doctor.bpId}
             title={doctors[doctor.bpId].title}
             avatar={doctors[doctor.bpId].avatar}
             job={doctors[doctor.bpId].job}
-            appointments={doctor.appointments}/>
+            appointments={doctor.appointments}
+          />
         ))}
       </MDBRow>
     </div>

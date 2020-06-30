@@ -4,7 +4,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 export const getWeekDay = date => {
   const today = moment(new Date()).format("YYYY-MM-DD")
-  const day = moment(date).format("YYYY-MM-DD") == today ? "Today" : days[date.getDay()]
+  const day = moment(date).format("YYYY-MM-DD") === today ? "Today" : days[date.getDay()]
   return day
 }
 

@@ -1,3 +1,5 @@
+require('dotenv').config({ path: ".env.production", });
+
 module.exports = {
   siteMetadata: {
     title: 'Aspire Medical Centre Eastwood Website',

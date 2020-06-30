@@ -11,6 +11,7 @@
     "aws-amplify-react": "^4.1.12",
     "axios": "^0.19.2",
     "gatsby": "^2.0.76",
+    "gatsby-cli": "^2.12.51",
     "gatsby-image": "^2.0.20",
     "gatsby-plugin-manifest": "^2.0.9",
     "gatsby-plugin-offline": "^2.0.16",

@@ -54,14 +54,15 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function DrAppCard({title, avatar, job, bio, appointments}) {
+export default function DrAppCard({drId, title, avatar, job, appointments}) {
   const classes = useStyles()
   const [expanded, setExpanded] = useState(false)
   const [dates, setDates] = useState([])
   const [topApps, setTopApps] = useState([])
   const [bottomApps, setBottomApps] = useState([])
 
-  const splitAppointments = (value, index, array) => {
+  //Split appointments into top 5 rows and the rest
+  const splitAppointments = (appointments) => {
     let tApps = []
     let bApps = []
 
@@ -87,7 +88,7 @@ export default function DrAppCard({title, avatar, job, bio, appointments}) {
   useEffect(() => {
     const dates = appointments.map(day => day.date)
     setDates(dates)
-    splitAppointments()
+    splitAppointments(appointments)
   }, [appointments])
     
   const handleExpandClick = () => {
@@ -116,7 +117,7 @@ export default function DrAppCard({title, avatar, job, bio, appointments}) {
         <CardContent>
           <DayHeadings dates={dates}/>
           <MDBRow>
-            {topApps.map(day => <DaySlots key={day.date} slots={day.slots}/>)}
+            {topApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots}/>)}
           </MDBRow>
           {expanded && 
             <>
