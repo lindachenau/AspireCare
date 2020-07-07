@@ -1,177 +1,219 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateBlog = /* GraphQL */ `
-  subscription OnCreateBlog {
-    onCreateBlog {
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser {
+    onCreateUser {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const onUpdateBlog = /* GraphQL */ `
-  subscription OnUpdateBlog {
-    onUpdateBlog {
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const onDeleteBlog = /* GraphQL */ `
-  subscription OnDeleteBlog {
-    onDeleteBlog {
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser {
+    onDeleteUser {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost {
-    onCreatePost {
+export const onCreatePatient = /* GraphQL */ `
+  subscription OnCreatePatient {
+    onCreatePatient {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost {
-    onUpdatePost {
+export const onUpdatePatient = /* GraphQL */ `
+  subscription OnUpdatePatient {
+    onUpdatePatient {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost {
-    onDeletePost {
+export const onDeletePatient = /* GraphQL */ `
+  subscription OnDeletePatient {
+    onDeletePatient {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const onCreateComment = /* GraphQL */ `
-  subscription OnCreateComment {
-    onCreateComment {
+export const onCreateAppointment = /* GraphQL */ `
+  subscription OnCreateAppointment {
+    onCreateAppointment {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
     }
   }
 `;
-export const onUpdateComment = /* GraphQL */ `
-  subscription OnUpdateComment {
-    onUpdateComment {
+export const onUpdateAppointment = /* GraphQL */ `
+  subscription OnUpdateAppointment {
+    onUpdateAppointment {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
     }
   }
 `;
-export const onDeleteComment = /* GraphQL */ `
-  subscription OnDeleteComment {
-    onDeleteComment {
+export const onDeleteAppointment = /* GraphQL */ `
+  subscription OnDeleteAppointment {
+    onDeleteAppointment {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }

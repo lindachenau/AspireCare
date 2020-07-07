@@ -3,7 +3,7 @@ import { MDBContainer, MDBRow, MDBCol } from "mdbreact"
 
 const Content = ({ title, titleColor="dark-grey", children }) => {
     return (
-        <MDBContainer maxWidth="md" style={{paddingTop: "10vh", paddingBottom: "15vh"}}>
+        <MDBContainer maxWidth="md" style={{paddingTop: "5vh", paddingBottom: "10vh"}}>
             <MDBRow >
                 <MDBCol md="12" className="mdb-color-text text-left">
                     <h1 className={`h1-responsive font-weight-bold text-center mb-0 pt-md-5 pt-5 ${titleColor}-text`} >{title}</h1>

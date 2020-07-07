@@ -1,5 +1,6 @@
 import React from 'react'
 import Container from '@material-ui/core/Container'
+import Button from '@material-ui/core/Button'
 
 export function AuthForm({ children, title, error }) {
   return (
@@ -67,3 +68,25 @@ export function ConfirmationCode({ handleUpdate, auth_code, autoComplete }) {
     </div>
   )
 }
+
+export function CustomAction({ padding, question, action, cb, disabled=false }) {
+  return (
+    <div
+      style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: padding
+    }}
+    >
+      <p style={{ marginTop: 10, marginBottom: 10 }}>{question}</p>
+      <Button
+        color="primary"
+        onClick={cb}
+        disabled={disabled}
+      >
+        {action}
+      </Button>
+  </div>
+  )
+}      

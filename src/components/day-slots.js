@@ -16,12 +16,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function DaySlots({drId, date, slots}) {
+export default function DaySlots({drId, date, slots, setAppId}) {
   const classes = useStyles()
 
   const handleSlot = (e) => {
     const message = bookingMessage(e.currentTarget.value)
-    alert(`Booking with ${message}`)
+    setAppId(message)
   }
      
   return (

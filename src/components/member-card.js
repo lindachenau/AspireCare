@@ -89,7 +89,7 @@ export default function MemberCard({role, title, job, image, school, qualificati
             {`Languages: ${languages}`}
           </Typography>  
           <Typography variant="body1" component="p">
-            {`Availability: ${availability}`}
+            {`Available: ${availability}`}
           </Typography>                            
         </CardContent>
         <CardActions disableSpacing>

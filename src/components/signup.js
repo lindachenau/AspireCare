@@ -1,10 +1,9 @@
 import React from 'react'
-import { navigate } from '@reach/router'
-import { Link } from 'gatsby'
+import { navigate } from 'gatsby'
 import { Auth } from 'aws-amplify'
 import NumberFormat from 'react-number-format'
-
-import { AuthForm, Email, Password, ConfirmationCode } from './auth-forms'
+import Button from '@material-ui/core/Button'
+import { AuthForm, Email, Password, ConfirmationCode, CustomAction } from './auth-forms'
 
 const initialState = {
   username: ``,
@@ -102,7 +101,7 @@ class SignUp extends React.Component {
   render() {
     if (this.state.stage === 0) {
       return (
-        <AuthForm title="Create a new account" error={this.state.error}>
+        <AuthForm title="Create a new account to book" error={this.state.error}>
           <Email
             handleUpdate={this.handleUpdate}
             email={this.state.email}
@@ -125,10 +124,12 @@ class SignUp extends React.Component {
               mask="_"
             />
           </div>
-          <button
+          <Button
             onClick={e => this.signUp(e)}
             type="submit"
-            className="btn btn-primary btn-block"
+            color="primary"
+            fullWidth
+            variant="contained"
             disabled={this.state.loading}
           >
             {this.state.loading ? null : 'Create Account'}
@@ -139,10 +140,13 @@ class SignUp extends React.Component {
                 aria-hidden="true"
               />
             )}
-          </button>
-          <p style={{ marginTop: 40 }} className="text-center">
-            Have an account? <Link to="/signin">Sign in</Link>
-          </p>
+          </Button>
+          <CustomAction
+            padding={10}
+            question="Have an account?"
+            action="Sign in"
+            cb={() => navigate("/signin")}
+          />          
         </AuthForm>
       )
     }
@@ -158,12 +162,14 @@ class SignUp extends React.Component {
           auth_code={this.state.auth_code}
           autoComplete="off"
         />
-        <button
+        <Button
           onClick={e => this.confirmSignUp(e)}
           type="submit"
-          className="btn btn-primary btn-block"
+          color="primary"
+          variant="contained"
+          fullWidth
           disabled={this.state.loading}
-        >
+        >        
           {this.state.loading ? null : 'Confirm'}
           {this.state.loading && (
             <span
@@ -172,31 +178,20 @@ class SignUp extends React.Component {
               aria-hidden="true"
             />
           )}
-        </button>
-        <p style={{ marginTop: 40 }} className="text-center">
-          Have an account? <Link to="/signin">Sign in</Link>
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <p
-            style={{ marginTop: 20, marginBottom: 20 }}
-            className="text-center"
-          >
-            Lost your code?
-          </p>
-          <button
-            className="btn btn-link"
-            onClick={e => this.resendCode(e)}
-            disabled={this.state.loading}
-          >
-            Resend Code
-          </button>
-        </div>
+        </Button>
+        <CustomAction
+          padding={10}
+          question="Have an account?"
+          action="Sign in"
+          cb={() => navigate("/signin")}
+        />
+        <CustomAction
+          padding={10}
+          question="Lost your code?"
+          action="Resend Code"
+          cb={e => this.resendCode(e)}
+          disabled={this.state.loading}
+        /> 
       </AuthForm>
     )
   }

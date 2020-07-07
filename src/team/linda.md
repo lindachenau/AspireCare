@@ -12,18 +12,14 @@ languages: "English, Mandarin"
 availability: "Tue, Wed, Sat"
 ---
 
-Linda is a very experienced SW/HW engineer with over 25 years of experience from 
-working in several commercial research and development companies. She has a 
-Computer Engineering background and her work spans a wide spectrum from ASIC 
-design, SW and novel algorithm development in image processing, computer vision 
-to AR/VR applications. 
+Kai is a family GP who is devoted to provide holistic care for his patients. His rural GP training experience equipped him with outstanding skills for handling emergency cases. He is accredited to perform surgical procedures for cryotherapy and minor skin lesions.    
 
-She is committed to apply new technologies to automate menial tasks and augment 
-human's working capacity. She is also a hobbyist in digital art and photography.
-The gallery section shows some of her work in photography and digital art. Her 
-interests in this area is the reason behind her high standard in UX/UI design 
-and development.
+He is a great listener and goes beyond to solve complex medical cases. He always has a smile on his face. His patients told him that they feel much better already as soon as they walk into his consulting room.    
 
-She believes the future of human work is imagination, creativity and strategy. 
-Building mobile applications and web solutions for business is the first step 
-toward fulfilling this dream. 
+In his free time, he enjoys being a handyman for his household. His collection of tools almost can compete with tradesmen.    
+
+Areas of Interest:
+- Chronic disease management 
+- Men's health
+- Paediatrics
+- Family medicine

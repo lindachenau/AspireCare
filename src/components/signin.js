@@ -1,10 +1,9 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import { navigate } from '@reach/router'
+import { navigate } from 'gatsby'
 import { Auth } from 'aws-amplify'
-
 import { setUser } from './app-user'
-import { AuthForm, Email, Password } from './auth-forms'
+import { AuthForm, Email, Password, CustomAction } from './auth-forms'
+import Button from '@material-ui/core/Button'
 
 class SignIn extends React.Component {
   state = {
@@ -42,7 +41,7 @@ class SignIn extends React.Component {
       }
       setUser(userInfo)
       this.setState({ loading: false })
-      navigate('/')
+      navigate('/my-account')
     } catch (err) {
       this.setState({ error: err, loading: false })
       console.log('error...: ', err)
@@ -54,21 +53,21 @@ class SignIn extends React.Component {
       <AuthForm title="Sign in to your account" error={this.state.error}>
         <Email
           handleUpdate={this.handleUpdate}
-          email={this.state.email}
-          autoComplete="on"
-        />
-        <Password
-          handleUpdate={this.handleUpdate}
           password={this.state.password}
           autoComplete="on"
         />
-        <p className="text-center">
-          Forgot your password? <Link to="/reset">Reset password</Link>
-        </p>
-        <button
+        <CustomAction
+          padding={10}
+          question="Forgot your password?"
+          action="Reset password"
+          cb={() => navigate("/reset")}
+        />
+        <Button
           onClick={e => this.login(e)}
           type="submit"
-          className="btn btn-primary btn-block"
+          color="primary"
+          variant="contained"
+          fullWidth
           disabled={this.state.loading}
         >
           {this.state.loading ? null : 'Sign In'}
@@ -79,10 +78,13 @@ class SignIn extends React.Component {
               aria-hidden="true"
             />
           )}
-        </button>
-        <p style={{ marginTop: 40 }} className="text-center">
-          No account? <Link to="/signup">Create account</Link>
-        </p>
+        </Button>
+        <CustomAction
+          padding={20}
+          question="No account?"
+          action="Create account"
+          cb={() => navigate("/signup")}
+        />        
       </AuthForm>
     )
   }

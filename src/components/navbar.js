@@ -20,6 +20,7 @@ const Navbar = () => {
   const signout = () => {
     logout()
     setLoggedIn(false)
+    navigate("/")
   }
 
   return (
@@ -67,7 +68,7 @@ const Navbar = () => {
                 <MDBDropdownMenu className={`dropdown-default ${styles.dropdownMenu}`}>
                   {loggedIn ? 
                     <>
-                      <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/")}>My account</MDBDropdownItem>
+                      <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/my-account")}>My account</MDBDropdownItem>
                       <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => signout()}>Sign out</MDBDropdownItem>
                     </> :
                     <>

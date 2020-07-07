@@ -1,204 +1,246 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createBlog = /* GraphQL */ `
-  mutation CreateBlog(
-    $input: CreateBlogInput!
-    $condition: ModelBlogConditionInput
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    createBlog(input: $input, condition: $condition) {
+    createUser(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const updateBlog = /* GraphQL */ `
-  mutation UpdateBlog(
-    $input: UpdateBlogInput!
-    $condition: ModelBlogConditionInput
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    updateBlog(input: $input, condition: $condition) {
+    updateUser(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const deleteBlog = /* GraphQL */ `
-  mutation DeleteBlog(
-    $input: DeleteBlogInput!
-    $condition: ModelBlogConditionInput
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    deleteBlog(input: $input, condition: $condition) {
+    deleteUser(input: $input, condition: $condition) {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const createPost = /* GraphQL */ `
-  mutation CreatePost(
-    $input: CreatePostInput!
-    $condition: ModelPostConditionInput
+export const createPatient = /* GraphQL */ `
+  mutation CreatePatient(
+    $input: CreatePatientInput!
+    $condition: ModelPatientConditionInput
   ) {
-    createPost(input: $input, condition: $condition) {
+    createPatient(input: $input, condition: $condition) {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const updatePost = /* GraphQL */ `
-  mutation UpdatePost(
-    $input: UpdatePostInput!
-    $condition: ModelPostConditionInput
+export const updatePatient = /* GraphQL */ `
+  mutation UpdatePatient(
+    $input: UpdatePatientInput!
+    $condition: ModelPatientConditionInput
   ) {
-    updatePost(input: $input, condition: $condition) {
+    updatePatient(input: $input, condition: $condition) {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const deletePost = /* GraphQL */ `
-  mutation DeletePost(
-    $input: DeletePostInput!
-    $condition: ModelPostConditionInput
+export const deletePatient = /* GraphQL */ `
+  mutation DeletePatient(
+    $input: DeletePatientInput!
+    $condition: ModelPatientConditionInput
   ) {
-    deletePost(input: $input, condition: $condition) {
+    deletePatient(input: $input, condition: $condition) {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const createComment = /* GraphQL */ `
-  mutation CreateComment(
-    $input: CreateCommentInput!
-    $condition: ModelCommentConditionInput
+export const createAppointment = /* GraphQL */ `
+  mutation CreateAppointment(
+    $input: CreateAppointmentInput!
+    $condition: ModelAppointmentConditionInput
   ) {
-    createComment(input: $input, condition: $condition) {
+    createAppointment(input: $input, condition: $condition) {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
     }
   }
 `;
-export const updateComment = /* GraphQL */ `
-  mutation UpdateComment(
-    $input: UpdateCommentInput!
-    $condition: ModelCommentConditionInput
+export const updateAppointment = /* GraphQL */ `
+  mutation UpdateAppointment(
+    $input: UpdateAppointmentInput!
+    $condition: ModelAppointmentConditionInput
   ) {
-    updateComment(input: $input, condition: $condition) {
+    updateAppointment(input: $input, condition: $condition) {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
     }
   }
 `;
-export const deleteComment = /* GraphQL */ `
-  mutation DeleteComment(
-    $input: DeleteCommentInput!
-    $condition: ModelCommentConditionInput
+export const deleteAppointment = /* GraphQL */ `
+  mutation DeleteAppointment(
+    $input: DeleteAppointmentInput!
+    $condition: ModelAppointmentConditionInput
   ) {
-    deleteComment(input: $input, condition: $condition) {
+    deleteAppointment(input: $input, condition: $condition) {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }

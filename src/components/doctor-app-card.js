@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function DrAppCard({drId, title, avatar, job, appointments}) {
+export default function DrAppCard({drId, title, avatar, job, appointments, setAppId}) {
   const classes = useStyles()
   const [expanded, setExpanded] = useState(false)
   const [dates, setDates] = useState([])
@@ -117,12 +117,12 @@ export default function DrAppCard({drId, title, avatar, job, appointments}) {
         <CardContent>
           <DayHeadings dates={dates}/>
           <MDBRow>
-            {topApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots}/>)}
+            {topApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots} setAppId={setAppId}/>)}
           </MDBRow>
           {expanded && 
             <>
               <MDBRow className={classes.bottomRowMargin}>
-                {bottomApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots}/>)}
+                {bottomApps.map(day => <DaySlots drId={drId} date={day.date} key={day.date} slots={day.slots} setAppId={setAppId}/>)}
               </MDBRow>
               <IconButton
                 className={classes.expandIconB}
@@ -134,7 +134,7 @@ export default function DrAppCard({drId, title, avatar, job, appointments}) {
                 {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </IconButton>                    
             </>
-          }         
+          }
         </CardContent>
       </Card>
     </MDBCol>

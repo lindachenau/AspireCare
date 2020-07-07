@@ -1,33 +1,37 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getBlog = /* GraphQL */ `
-  query GetBlog($id: ID!) {
-    getBlog(id: $id) {
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
       id
-      name
-      posts {
+      username
+      patients {
         items {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
         nextToken
       }
     }
   }
 `;
-export const listBlogs = /* GraphQL */ `
-  query ListBlogs(
-    $filter: ModelBlogFilterInput
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $filter: ModelUserFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
@@ -35,45 +39,54 @@ export const listBlogs = /* GraphQL */ `
     }
   }
 `;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
+export const getPatient = /* GraphQL */ `
+  query GetPatient($id: ID!) {
+    getPatient(id: $id) {
       id
+      patient_id
       title
-      content
-      blog {
+      firstname
+      lastname
+      dob
+      gender
+      user {
         id
-        name
-        posts {
+        username
+        patients {
           nextToken
         }
       }
-      comments {
+      appointments {
         items {
           id
-          content
+          appointment_id
+          booking_date
         }
         nextToken
       }
     }
   }
 `;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
-    $filter: ModelPostFilterInput
+export const listPatients = /* GraphQL */ `
+  query ListPatients(
+    $filter: ModelPatientFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPatients(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
@@ -81,40 +94,50 @@ export const listPosts = /* GraphQL */ `
     }
   }
 `;
-export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
+export const getAppointment = /* GraphQL */ `
+  query GetAppointment($id: ID!) {
+    getAppointment(id: $id) {
       id
-      content
-      post {
+      appointment_id
+      booking_date
+      patient {
         id
+        patient_id
         title
-        content
-        blog {
+        firstname
+        lastname
+        dob
+        gender
+        user {
           id
-          name
+          username
         }
-        comments {
+        appointments {
           nextToken
         }
       }
     }
   }
 `;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $filter: ModelCommentFilterInput
+export const listAppointments = /* GraphQL */ `
+  query ListAppointments(
+    $filter: ModelAppointmentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAppointments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        content
-        post {
+        appointment_id
+        booking_date
+        patient {
           id
+          patient_id
           title
-          content
+          firstname
+          lastname
+          dob
+          gender
         }
       }
       nextToken
