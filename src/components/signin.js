@@ -53,6 +53,11 @@ class SignIn extends React.Component {
       <AuthForm title="Sign in to your account" error={this.state.error}>
         <Email
           handleUpdate={this.handleUpdate}
+          email={this.state.email}
+          autoComplete="on"
+        />
+        <Password
+          handleUpdate={this.handleUpdate}
           password={this.state.password}
           autoComplete="on"
         />
