@@ -13,6 +13,10 @@ import {
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import { API, graphqlOperation } from 'aws-amplify'
+import { createPatient } from '../graphql/mutations'
+import moment from 'moment'
+import { getUser } from './app-user'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -30,11 +34,11 @@ const useStyles = makeStyles(theme => ({
 export default function ProfileForm({theme, triggerOpen, initOpen}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
-  const [title, setTitle] = useState(null)
+  const [title, setTitle] = useState("")
   const [firstName, setFirstName] = useState(null)
   const [lastName, setLastName] = useState(null)
   const [dOB, setDOB] = useState(null)
-  const [gender, setGender] = useState(null)
+  const [gender, setGender] = useState("")
   
   const classes = useStyles(theme)
 
@@ -49,7 +53,20 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
   }, [triggerOpen, initOpen])
 
   const handleSave = async () => {
-
+    const dob = moment(dOB).format("YYYY-MM-DD")
+    const newPatient = await API.graphql(graphqlOperation(createPatient, {
+      input: {
+        id: `${firstName} ${lastName} ${dob} ${gender} `,
+        title: title,
+        firstname: firstName,
+        lastname: lastName,
+        dob: dob,
+        gender: gender,
+        userID: getUser().username
+      }
+    }))
+    
+    //Also create BP patient account here later
     setOpen(false)
   }
 
@@ -137,7 +154,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             onClick={handleSave} 
             color="primary" 
             fullWidth
-            disabled={!(title && firstName && lastName && dOB && gender)}
+            disabled={!(title != "" && firstName && lastName && dOB && gender != "")}
           >
             Save
           </Button>

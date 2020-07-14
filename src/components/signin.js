@@ -4,6 +4,9 @@ import { Auth } from 'aws-amplify'
 import { setUser } from './app-user'
 import { AuthForm, Email, Password, CustomAction } from './auth-forms'
 import Button from '@material-ui/core/Button'
+import { API, graphqlOperation } from 'aws-amplify'
+import { getUser }  from '../graphql/queries'
+import { createUser }  from '../graphql/mutations'
 
 class SignIn extends React.Component {
   state = {
@@ -28,6 +31,31 @@ class SignIn extends React.Component {
     })
   }
 
+  addUser = async username => {
+    let existingUser
+
+    try {
+      existingUser = await API.graphql(graphqlOperation(getUser, {id: username}))
+    } catch (err) {
+      console.log('Amplify getUser error...: ', err)
+      return
+    }
+    
+    if (!existingUser.data.getUser) {
+      try {
+        const newUser = await API.graphql(graphqlOperation(createUser, {
+          input: {
+            id: username
+          }
+        }))
+
+      } catch (err) {
+        console.log('Amplify createUser error...: ', err)
+        return        
+      }
+    }
+  }
+
   login = async e => {
     e.preventDefault()
     const { username, password } = this.state
@@ -41,6 +69,7 @@ class SignIn extends React.Component {
       }
       setUser(userInfo)
       this.setState({ loading: false })
+      this.addUser(user.username)      
       navigate('/my-account')
     } catch (err) {
       this.setState({ error: err, loading: false })

@@ -11,6 +11,7 @@ import moment from 'moment'
 import axios from "axios"
 import { doctors } from '../utils/booking-helper'
 import Message from './message'
+import { isLoggedIn, setUser, getUser } from './app-user'
 
 const useStyles = makeStyles(theme => ({
   leftMiddle: {
@@ -61,14 +62,14 @@ const AppBrowser = () => {
       setAppData(response.data)
     }
     setLoading(true)
-    setImmediate(() => fetchApps())
+    fetchApps()
     setLoading(false)
 
   }, [startDate, numDays, bp_server])
 
   useLayoutEffect(() => {
     //narrow screen display 4 columns only. Need to check whether it works for iPad or not
-    setNumDays(window.innerWidth >= 992 ? 5 : 4)
+    setImmediate(() => setNumDays(window.innerWidth >= 992 ? 5 : 4))
   }, [])
 
   useEffect(() => {
@@ -85,7 +86,23 @@ const AppBrowser = () => {
   
   const openMessage = appId => {
     setAppId(appId)
-    setTriggerMessage(!triggerMessage)
+
+    //Save the chosen slot
+    const userInfo = {
+      ...getUser(),
+      appId: appId,
+    }
+    setUser(userInfo)
+    
+    if (isLoggedIn()) {
+      //Selected patient already, go straight to booking. Otherwise send user to my-account.
+      if (userInfo.patientId)
+        navigate("/book")
+      else 
+        navigate('/my-account')
+    } else {
+      setTriggerMessage(!triggerMessage)
+    }
   }
 
   return (

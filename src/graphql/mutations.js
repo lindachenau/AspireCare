@@ -8,16 +8,15 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -31,16 +30,15 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -54,16 +52,15 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -77,15 +74,14 @@ export const createPatient = /* GraphQL */ `
   ) {
     createPatient(input: $input, condition: $condition) {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -93,8 +89,8 @@ export const createPatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -108,15 +104,14 @@ export const updatePatient = /* GraphQL */ `
   ) {
     updatePatient(input: $input, condition: $condition) {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -124,8 +119,8 @@ export const updatePatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -139,15 +134,14 @@ export const deletePatient = /* GraphQL */ `
   ) {
     deletePatient(input: $input, condition: $condition) {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -155,8 +149,8 @@ export const deletePatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -170,19 +164,18 @@ export const createAppointment = /* GraphQL */ `
   ) {
     createAppointment(input: $input, condition: $condition) {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken
@@ -198,19 +191,18 @@ export const updateAppointment = /* GraphQL */ `
   ) {
     updateAppointment(input: $input, condition: $condition) {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken
@@ -226,19 +218,18 @@ export const deleteAppointment = /* GraphQL */ `
   ) {
     deleteAppointment(input: $input, condition: $condition) {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken

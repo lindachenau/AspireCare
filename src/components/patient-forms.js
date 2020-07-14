@@ -31,7 +31,7 @@ const PatientForms = () => {
           </ListItemIcon>
           <ListItemText
             primary="Profile"
-            secondary="Mandatory personal details"
+            secondary="Mandatory patient identity"
           />
         </ListItem>
         <Divider variant="inset" component="li" />
@@ -62,6 +62,16 @@ const PatientForms = () => {
           <ListItemText
             primary="Contact"
             secondary="Optional contact details"
+          />
+        </ListItem>
+        <Divider variant="inset" component="li" />
+        <ListItem className={classes.pointer} alignItems="flex-start">
+          <ListItemIcon>
+            <CreditCardIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Pensioner"
+            secondary="Optional pensioner details"
           />
         </ListItem>                  
       </List>

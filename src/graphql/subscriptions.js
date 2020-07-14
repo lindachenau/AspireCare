@@ -5,16 +5,15 @@ export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -25,16 +24,15 @@ export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -45,16 +43,15 @@ export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
       id
-      username
       patients {
         items {
           id
-          patient_id
           title
           firstname
           lastname
           dob
           gender
+          userID
         }
         nextToken
       }
@@ -65,15 +62,14 @@ export const onCreatePatient = /* GraphQL */ `
   subscription OnCreatePatient {
     onCreatePatient {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -81,8 +77,8 @@ export const onCreatePatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -93,15 +89,14 @@ export const onUpdatePatient = /* GraphQL */ `
   subscription OnUpdatePatient {
     onUpdatePatient {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -109,8 +104,8 @@ export const onUpdatePatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -121,15 +116,14 @@ export const onDeletePatient = /* GraphQL */ `
   subscription OnDeletePatient {
     onDeletePatient {
       id
-      patient_id
       title
       firstname
       lastname
       dob
       gender
+      userID
       user {
         id
-        username
         patients {
           nextToken
         }
@@ -137,8 +131,8 @@ export const onDeletePatient = /* GraphQL */ `
       appointments {
         items {
           id
-          appointment_id
           booking_date
+          patientID
         }
         nextToken
       }
@@ -149,19 +143,18 @@ export const onCreateAppointment = /* GraphQL */ `
   subscription OnCreateAppointment {
     onCreateAppointment {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken
@@ -174,19 +167,18 @@ export const onUpdateAppointment = /* GraphQL */ `
   subscription OnUpdateAppointment {
     onUpdateAppointment {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken
@@ -199,19 +191,18 @@ export const onDeleteAppointment = /* GraphQL */ `
   subscription OnDeleteAppointment {
     onDeleteAppointment {
       id
-      appointment_id
       booking_date
+      patientID
       patient {
         id
-        patient_id
         title
         firstname
         lastname
         dob
         gender
+        userID
         user {
           id
-          username
         }
         appointments {
           nextToken

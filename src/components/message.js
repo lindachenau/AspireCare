@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function Message({theme, message, action, cb, triggerOpen, initOpen}) {
+export default function Message({theme, message, action, cb, triggerOpen, initOpen, disableClose=false}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
 
@@ -40,19 +40,32 @@ export default function Message({theme, message, action, cb, triggerOpen, initOp
     }
   }, [triggerOpen, initOpen])
 
+  const closeDialog = () => {
+    if (disableClose)
+      return
+
+    setOpen(false)      
+  }
+
+  const doAction = () => {
+    cb()
+    setOpen(false)
+  }
+
   return (
     <>
-      <Dialog open={open} onBackdropClick={() => setOpen(false)}>
-        <IconButton edge="start" color="inherit" className={classes.close} onClick={() => setOpen(false)} aria-label="close">
-          <CloseIcon />
-        </IconButton>        
+      <Dialog open={open} onBackdropClick={closeDialog}>
+        {!disableClose &&
+          <IconButton edge="start" color="inherit" className={classes.close} onClick={() => setOpen(false)} aria-label="close">
+            <CloseIcon />
+          </IconButton>}        
         <DialogContent>
           <Typography variant="body2" align="center" gutterBottom>
             {message}
           </Typography>          
         </DialogContent>
         <DialogActions className={classes.button}>
-          <Button onClick={cb} color="primary">
+          <Button onClick={doAction} color="primary">
             {action}
           </Button>
         </DialogActions>
