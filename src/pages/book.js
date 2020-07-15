@@ -52,7 +52,7 @@ export default () => {
   const [appId, setAppId] = useState(null)
   const [email, setEmail] = useState(null)
   const [triggerMessage, setTriggerMessage] = useState(false)
-  const message = `You have booked ${patient} with ${appId} for ${consultationType[value]}. An email has been sent to you for confirmation.`  
+  const message = `You have booked ${patient} with ${appId} for ${consultationType[value]}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`  
   const classes = useStyles()
 
   useEffect(() => {

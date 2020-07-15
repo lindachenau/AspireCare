@@ -29,7 +29,6 @@ class Reset extends React.Component {
     try {
       this.setState({ loading: true })
       await Auth.forgotPassword(email)
-      console.log('forgotPassword')
       this.setState({ loading: false, stage: 1 })
     } catch (err) {
       this.setState({ error: err, loading: false })
@@ -43,7 +42,6 @@ class Reset extends React.Component {
     this.setState({ loading: true })
     Auth.forgotPasswordSubmit(email, auth_code, password)
       .then(data => {
-        console.log(data)
         this.setState({ loading: false })
       })
       .then(() => navigate('/signin'))

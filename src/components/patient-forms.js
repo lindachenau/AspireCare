@@ -18,12 +18,14 @@ const useStyles = makeStyles(theme => ({
   }}
 }))
 
-const PatientForms = () => {
+const PatientForms = ({patient}) => {
   const classes = useStyles()
-  const [triggerProfile, setTriggerProfile] = useState(false) 
+  const [triggerProfile, setTriggerProfile] = useState(false)
+  const patientHeading = `Edit ${patient ? patient : "new patient"}'s profile and other information`
   
   return (
     <>
+      <h3 className={'h3-responsive font-weight-bold text-center pt-5'} >{patientHeading}</h3>
       <List>
         <ListItem className={classes.pointer} alignItems="flex-start" onClick={() => setTriggerProfile(!triggerProfile)}>
           <ListItemIcon>

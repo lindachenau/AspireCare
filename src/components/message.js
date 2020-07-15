@@ -60,7 +60,7 @@ export default function Message({theme, message, action, cb, triggerOpen, initOp
             <CloseIcon />
           </IconButton>}        
         <DialogContent>
-          <Typography variant="body2" align="center" gutterBottom>
+          <Typography variant="body2" align="left" gutterBottom>
             {message}
           </Typography>          
         </DialogContent>

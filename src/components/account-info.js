@@ -45,8 +45,7 @@ export default () => {
             primary="If you book for a new patient to our clinic, we encourage you to fill in their Medicare details online 
             and submit to our Practice Management System. Our reception will just need to check their ID against the data you provided 
             and the patient doesn't have to fill in personal details when they visit. This will speed up their first visit.
-            If the patient does not have Medicare but has a Health Fund, please submit the information to save time. Our website does 
-            not keep your data. All information is encrypted before submitting to our Practice Management System."
+            Our website does not keep your data. All information is encrypted before submitting to our Practice Management System."
           />
         </ListItem>
         <ListItem>

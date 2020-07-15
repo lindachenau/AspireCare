@@ -31,10 +31,13 @@ const useStyles = makeStyles(theme => ({
   },
   grow: {
     flexGrow: 1,
+  },
+  iconColor: {
+    color: theme.palette.primary.main
   }
 }))
 
-const Patient = ({name, dob, id, patientIndex}) => {
+const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
   const bookAppointment = () => {
     //Save the selected patient
     const userInfo = {
@@ -52,6 +55,11 @@ const Patient = ({name, dob, id, patientIndex}) => {
       navigate("/appointments")
   }
 
+  const editExistingPatient = () => {
+    setPatient(name)
+    setPatStage(1)
+  }
+
   return (
     <ListItem>
       <ListItemText
@@ -59,7 +67,7 @@ const Patient = ({name, dob, id, patientIndex}) => {
         secondary={dob}
       />
       <ListItemIcon>
-        <IconButton edge="end" aria-label="edit">
+        <IconButton edge="end" aria-label="edit" onClick={editExistingPatient}>
           <EditIcon />
         </IconButton>
       </ListItemIcon>
@@ -77,9 +85,42 @@ const Patient = ({name, dob, id, patientIndex}) => {
   )
 }
 
+const Legend = () => {
+  const classes = useStyles()
+  return (
+    <>
+      <ListItem>
+        <ListItemIcon className={classes.iconColor} >
+          <EditIcon />
+        </ListItemIcon>      
+        <ListItemText
+          primary="Edit patient profile and other information"
+        />
+      </ListItem> 
+      <ListItem>
+        <ListItemIcon className={classes.iconColor}>
+          <DeleteIcon />
+        </ListItemIcon>      
+        <ListItemText
+          primary="Remove a patient from your management"
+        />
+      </ListItem>    
+      <ListItem>
+        <ListItemIcon className={classes.iconColor}>
+          <ArrowForwardIosIcon />
+        </ListItemIcon>      
+        <ListItemText
+          primary="Make an appointment for a patient"
+        />
+      </ListItem>
+    </>             
+  )
+}
+
 const Patients = ({patStage, setPatStage}) => {
   
   const [patients, setPatients] = useState([])
+  const [patient, setPatient] = useState(null)
   const [triggerFetchPatients, setTriggerFetchPatients] = useState(false)
   const classes = useStyles()
 
@@ -111,11 +152,17 @@ const Patients = ({patStage, setPatStage}) => {
     setPatStage(0)
   }
 
+  const addNewPatient = () => {
+    setPatient(null)
+    setPatStage(1)
+  }
+
   return (
     <>
       {patStage === 0 && 
       <Paper className={classes.root} elevation={3}>
         <List>
+          <Legend />
           {patients.map((patient, index) => {
             return (
               <Patient 
@@ -124,11 +171,13 @@ const Patients = ({patStage, setPatStage}) => {
                 dob={patient.dob} 
                 id={patient.id}
                 patientIndex={index}
+                setPatient={setPatient}
+                setPatStage={setPatStage}
               />
             )}
           )}
           <ListItemIcon>
-            <IconButton edge="end" aria-label="add" onClick={() => setPatStage(1)}>
+            <IconButton edge="end" aria-label="add" onClick={addNewPatient}>
               <PersonAddIcon />
             </IconButton>
           </ListItemIcon>  
@@ -136,7 +185,7 @@ const Patients = ({patStage, setPatStage}) => {
       </Paper>}
       {patStage === 1 && 
       <>
-        <PatientForms />
+        <PatientForms patient={patient}/>
         <div className={classes.flex}>
           <div className={classes.grow} />
           <Button 

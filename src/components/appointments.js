@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { navigate } from 'gatsby'
 import Paper from '@material-ui/core/Paper' 
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
@@ -12,10 +11,10 @@ import FormControl from '@material-ui/core/FormControl'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormLabel from '@material-ui/core/FormLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import CancelIcon from '@material-ui/icons/Cancel'
+import Typography from '@material-ui/core/Typography'
 import Message from '../components/message'
 import { getUser } from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
@@ -34,10 +33,13 @@ const useStyles = makeStyles(theme => ({
   flex: {
     display: 'flex',
     justifyContent: "space-around"
+  },
+  norecord: {
+    margin: 30
   }
 }))
 
-const Appointment = ({id, appointmentDate, setAppId, triggerMessage, setTriggerMessage}) => {
+const Appointment = ({id, appointmentDate, setAppId, triggerMessage, setTriggerMessage, appointmentStatus}) => {
   const cancelAppointment = () => {
     setAppId(id)
     setTriggerMessage(!triggerMessage)
@@ -48,11 +50,13 @@ const Appointment = ({id, appointmentDate, setAppId, triggerMessage, setTriggerM
       <ListItemText
         primary={appointmentDate}
       />
-      <ListItemIcon>
-        <IconButton edge="end" aria-label="cancel" onClick={cancelAppointment}>
-          <CancelIcon />
-        </IconButton>
-      </ListItemIcon>
+      {appointmentStatus === 'current' &&
+        <ListItemIcon>
+          <IconButton edge="end" aria-label="cancel" onClick={cancelAppointment}>
+            <CancelIcon />
+          </IconButton>
+        </ListItemIcon>
+      }
     </ListItem>
   )
 }
@@ -106,7 +110,15 @@ const Appointments = ({}) => {
             limit: 20
           }))
 
-          setAppointments(appointments.data.listAppointments.items)
+          const now = new Date()
+          setAppointments(appointments.data.listAppointments.items.filter(appointment => {
+            const slot = new Date(appointment.booking_date)
+
+            if (appointmentStatus === 'current')
+              return (slot > now) ? appointment : null
+            else
+              return (slot <= now) ? appointment : null
+          }))
 
         } catch (err) {
           console.log(console.log('Amplify listAppointments error...: ', err))
@@ -116,7 +128,7 @@ const Appointments = ({}) => {
     
     getAppointmentsByPatient()
 
-  }, [patients, curPatient, triggerFetchPatients])
+  }, [patients, curPatient, triggerFetchPatients, appointmentStatus] )
 
   const confirmCancelling = async () => {
     try {
@@ -163,7 +175,8 @@ const Appointments = ({}) => {
             <FormControlLabel value="history" control={<Radio />} label="History" />
           </RadioGroup>
         </FormControl>
-      </div>                 
+      </div>
+      {appointments.length === 0 && <Typography className={classes.norecord}>No records found</Typography>}            
       <List>
         {appointments.map(appointment => {
           return (
@@ -173,6 +186,7 @@ const Appointments = ({}) => {
               setAppId={setAppId}
               triggerMessage={triggerMessage}
               setTriggerMessage={setTriggerMessage}
+              appointmentStatus={appointmentStatus}
             />
           )}
         )}

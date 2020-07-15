@@ -8,6 +8,7 @@ import Appointments from '../components/appointments'
 import { setUser, getUser } from '../components/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { listPatients }  from '../graphql/queries'
+import UpdateUser from '../components/update-user'
 
 export default () => {
   const [value, setValue] = useState(-1)
@@ -54,7 +55,7 @@ export default () => {
         {value === 0 && <AccountInfo />}
         {value === 1 && <Appointments />}
         {value === 2 && <Patients patStage={patStage} setPatStage={setPatStage}/>}
-
+        {value === 3 && <UpdateUser />}
       </Content>    
     </Layout>
   )
