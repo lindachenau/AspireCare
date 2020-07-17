@@ -43,7 +43,7 @@ class SignIn extends React.Component {
     
     if (!existingUser.data.getUser) {
       try {
-        const newUser = await API.graphql(graphqlOperation(createUser, {
+        await API.graphql(graphqlOperation(createUser, {
           input: {
             id: username
           }

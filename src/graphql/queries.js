@@ -8,12 +8,8 @@ export const getUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
       }
@@ -46,17 +42,18 @@ export const getPatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -78,9 +75,8 @@ export const listPatients = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -94,7 +90,10 @@ export const getAppointment = /* GraphQL */ `
   query GetAppointment($id: ID!) {
     getAppointment(id: $id) {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -103,9 +102,8 @@ export const getAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -123,7 +121,10 @@ export const listAppointments = /* GraphQL */ `
     listAppointments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        booking_date
+        time
+        status {
+          category
+        }
         patientID
         patient {
           id
@@ -132,74 +133,6 @@ export const listAppointments = /* GraphQL */ `
           lastname
           dob
           gender
-          userID
-        }
-      }
-      nextToken
-    }
-  }
-`;
-export const patientsByUser = /* GraphQL */ `
-  query PatientsByUser(
-    $userID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelPatientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    patientsByUser(
-      userID: $userID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        title
-        firstname
-        lastname
-        dob
-        gender
-        userID
-        user {
-          id
-        }
-        appointments {
-          nextToken
-        }
-      }
-      nextToken
-    }
-  }
-`;
-export const appointmentsByPatient = /* GraphQL */ `
-  query AppointmentsByPatient(
-    $patientID: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelAppointmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    appointmentsByPatient(
-      patientID: $patientID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        booking_date
-        patientID
-        patient {
-          id
-          title
-          firstname
-          lastname
-          dob
-          gender
-          userID
         }
       }
       nextToken

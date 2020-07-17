@@ -11,12 +11,8 @@ export const createUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
       }
@@ -33,12 +29,8 @@ export const updateUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
       }
@@ -55,14 +47,106 @@ export const deleteUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
+      }
+    }
+  }
+`;
+export const createUserMember = /* GraphQL */ `
+  mutation CreateUserMember(
+    $input: CreateUserMemberInput!
+    $condition: ModelUserMemberConditionInput
+  ) {
+    createUserMember(input: $input, condition: $condition) {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
+      }
+    }
+  }
+`;
+export const updateUserMember = /* GraphQL */ `
+  mutation UpdateUserMember(
+    $input: UpdateUserMemberInput!
+    $condition: ModelUserMemberConditionInput
+  ) {
+    updateUserMember(input: $input, condition: $condition) {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
+      }
+    }
+  }
+`;
+export const deleteUserMember = /* GraphQL */ `
+  mutation DeleteUserMember(
+    $input: DeleteUserMemberInput!
+    $condition: ModelUserMemberConditionInput
+  ) {
+    deleteUserMember(input: $input, condition: $condition) {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
       }
     }
   }
@@ -79,17 +163,18 @@ export const createPatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -109,17 +194,18 @@ export const updatePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -139,17 +225,18 @@ export const deletePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -164,7 +251,10 @@ export const createAppointment = /* GraphQL */ `
   ) {
     createAppointment(input: $input, condition: $condition) {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -173,9 +263,8 @@ export const createAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -191,7 +280,10 @@ export const updateAppointment = /* GraphQL */ `
   ) {
     updateAppointment(input: $input, condition: $condition) {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -200,9 +292,8 @@ export const updateAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -218,7 +309,10 @@ export const deleteAppointment = /* GraphQL */ `
   ) {
     deleteAppointment(input: $input, condition: $condition) {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -227,9 +321,8 @@ export const deleteAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken

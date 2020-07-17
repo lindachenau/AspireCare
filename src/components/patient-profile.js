@@ -14,7 +14,8 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { API, graphqlOperation } from 'aws-amplify'
-import { createPatient } from '../graphql/mutations'
+import { createPatient, createUserMember } from '../graphql/mutations'
+import { getPatient } from '../graphql/queries'
 import moment from 'moment'
 import { getUser } from './app-user'
 
@@ -54,17 +55,44 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
 
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
-    const newPatient = await API.graphql(graphqlOperation(createPatient, {
-      input: {
-        id: `${firstName} ${lastName} ${dob} ${gender} `,
-        title: title,
-        firstname: firstName,
-        lastname: lastName,
-        dob: dob,
-        gender: gender,
-        userID: getUser().username
+    const patientId = `${firstName} ${lastName} ${dob} ${gender}`
+    const username = getUser().username
+    const existingPatient = await API.graphql(graphqlOperation(getPatient, {id: patientId}))
+
+    if (!existingPatient.data.getPatient) {
+      API.graphql(graphqlOperation(createPatient, {
+          input: {
+            id: patientId,
+            title: title,
+            firstname: firstName,
+            lastname: lastName,
+            dob: dob,
+            gender: gender
+          }
+      }))
+      .then(() => {
+        API.graphql(graphqlOperation(createUserMember, {
+          input: {
+            userID: username,
+            memberID: patientId
+          }
+        }))
+      })
+      .catch(err => console.log('Amplify createPatient error...: ', err))
+    }
+    else {
+      //Patient exists already, just add the new agent
+      try {
+        API.graphql(graphqlOperation(createUserMember, {
+          input: {
+            userID: username,
+            memberID: patientId
+          }
+        }))
+      } catch (err) {
+        console.log('Amplify createUserMember error...: ', err)
       }
-    }))
+    }
     
     //Also create BP patient account here later
     setOpen(false)

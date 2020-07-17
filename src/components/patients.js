@@ -13,9 +13,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import Button from '@material-ui/core/Button'
 import PatientForms from './patient-forms'
-import { getUser, setUser } from './app-user'
+import { getUser as getAppUser, setUser } from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
-import { listPatients }  from '../graphql/queries'
+import { getUser, getPatient }  from '../graphql/queries'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,10 +38,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
+
   const bookAppointment = () => {
     //Save the selected patient
     const userInfo = {
-      ...getUser(),
+      ...getAppUser(),
       patientName: name,
       patientId: id,
       patientIndex: patientIndex
@@ -126,20 +127,26 @@ const Patients = ({patStage, setPatStage}) => {
 
   useEffect(() => {
     const getPatientsByUser = async () => {
-      const username = getUser().username
+      const username = getAppUser().username
       try {
-        const patients = await API.graphql(graphqlOperation(listPatients, {
-          filter: {
-            userID: {
-              eq: username
-            }
-          }
+        const user = await API.graphql(graphqlOperation(getUser, {id: username}))
+        const members = user.data.getUser.patients.items
+        const patientIds = members.map(member => member.memberID)
+        
+        Promise.allSettled(patientIds.map(id => {
+          return API.graphql(graphqlOperation(getPatient, {id: id}))
         }))
-
-        setPatients(patients.data.listPatients.items)
-
+        .then((results) => {
+          let pats = []
+          results.forEach(result => {
+            if (result.status === 'fulfilled') {
+              pats.push(result.value.data.getPatient)
+            }
+          })
+          setPatients(pats)
+        })
       } catch (err) {
-        console.log(console.log('Amplify listPatients error...: ', err))
+        console.log('Amplify getUser error...: ', err)
       }
     }
 
@@ -163,19 +170,17 @@ const Patients = ({patStage, setPatStage}) => {
       <Paper className={classes.root} elevation={3}>
         <List>
           <Legend />
-          {patients.map((patient, index) => {
-            return (
-              <Patient 
-                key={patient.dob} 
-                name={`${patient.firstname} ${patient.lastname}`} 
-                dob={patient.dob} 
-                id={patient.id}
-                patientIndex={index}
-                setPatient={setPatient}
-                setPatStage={setPatStage}
-              />
-            )}
-          )}
+          {patients.map((pat, index) => (
+            <Patient 
+              key={pat.dob} 
+              name={`${pat.firstname} ${pat.lastname}`} 
+              dob={pat.dob} 
+              id={pat.id}
+              patientIndex={index}
+              setPatient={setPatient}
+              setPatStage={setPatStage}
+            />
+          ))}
           <ListItemIcon>
             <IconButton edge="end" aria-label="add" onClick={addNewPatient}>
               <PersonAddIcon />

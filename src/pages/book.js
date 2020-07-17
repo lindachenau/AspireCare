@@ -72,7 +72,7 @@ export default () => {
       await API.graphql(graphqlOperation(createAppointment, {
         input: {
           id: appId,
-          booking_date: appId.slice(-19),
+          time: appId.slice(-19),
           patientID: patientId
         }
       }))

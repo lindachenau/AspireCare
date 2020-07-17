@@ -5,9 +5,9 @@ import AccountNav from '../components/account-nav'
 import AccountInfo from '../components/account-info'
 import Patients from '../components/patients'
 import Appointments from '../components/appointments'
-import { setUser, getUser } from '../components/app-user'
+import { setUser, getUser as getAppUser } from '../components/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
-import { listPatients }  from '../graphql/queries'
+import { getUser }  from '../graphql/queries'
 import UpdateUser from '../components/update-user'
 
 export default () => {
@@ -17,15 +17,11 @@ export default () => {
 
   useEffect(() => {
     const getPatientsByUser = async () => {
-      const userInfo = getUser()
+      const userInfo = getAppUser()
       try {
-        const patients = await API.graphql(graphqlOperation(listPatients, {
-          filter: {
-            userID: {
-              eq: userInfo.username
-            }
-          }
-        }))
+        const user = await API.graphql(graphqlOperation(getUser, {id: userInfo.username}))
+      
+        const patients = user.data.getUser.patients.items
 
         if (userInfo.checkingBookingStatus) {
           setValue(1)
@@ -33,14 +29,14 @@ export default () => {
           setUser(userInfo)
         } else {
           //Only go to Info tab when first time login
-          if (patients.data.listPatients.items.length > 0)
+          if (patients.length > 0)
             setValue(2)
           else
             setValue(0)
         }
 
       } catch (err) {
-        console.log(console.log('Amplify listPatients error...: ', err))
+        console.log(console.log('Amplify getUser error...: ', err))
       }
     }
 

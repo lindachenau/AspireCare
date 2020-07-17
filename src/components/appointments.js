@@ -16,9 +16,9 @@ import MenuItem from '@material-ui/core/MenuItem'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Typography from '@material-ui/core/Typography'
 import Message from '../components/message'
-import { getUser } from './app-user'
+import { getUser as getAppUser} from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
-import { listPatients, listAppointments }  from '../graphql/queries'
+import { getUser, getPatient, listAppointments }  from '../graphql/queries'
 import { deleteAppointment } from '../graphql/mutations'
 
 const useStyles = makeStyles(theme => ({
@@ -62,7 +62,7 @@ const Appointment = ({id, appointmentDate, setAppId, triggerMessage, setTriggerM
 }
 
 const Appointments = ({}) => {
-  const userInfo = getUser()
+  const userInfo = getAppUser()
   const [patients, setPatients] = useState([])
   const [curPatient, setCurPatient] = useState(userInfo.patientIndex ? userInfo.patientIndex : 0)
   const [appId, setAppId] = useState(null)
@@ -75,26 +75,32 @@ const Appointments = ({}) => {
 
   useEffect(() => {
     const getPatientsByUser = async () => {
-      const username = userInfo.username
+      const username = getAppUser().username
       try {
-        const patients = await API.graphql(graphqlOperation(listPatients, {
-          filter: {
-            userID: {
-              eq: username
-            }
-          }
-        }))
+        const user = await API.graphql(graphqlOperation(getUser, {id: username}))
+        const members = user.data.getUser.patients.items
+        const patientIds = members.map(member => member.memberID)
         
-        setPatients(patients.data.listPatients.items)
-
+        Promise.allSettled(patientIds.map(id => {
+          return API.graphql(graphqlOperation(getPatient, {id: id}))
+        }))
+        .then((results) => {
+          let pats = []
+          results.forEach(result => {
+            if (result.status === 'fulfilled') {
+              pats.push(result.value.data.getPatient)
+            }
+          })
+          setPatients(pats)
+        })
       } catch (err) {
-        console.log(console.log('Amplify listPatients error...: ', err))
+        console.log('Amplify getUser error...: ', err)
       }
     }
 
     getPatientsByUser()
 
-  }, [])
+  }, [])  
 
   useEffect(() => {
     const getAppointmentsByPatient = async () => {
@@ -112,7 +118,7 @@ const Appointments = ({}) => {
 
           const now = new Date()
           setAppointments(appointments.data.listAppointments.items.filter(appointment => {
-            const slot = new Date(appointment.booking_date)
+            const slot = new Date(appointment.time)
 
             if (appointmentStatus === 'current')
               return (slot > now) ? appointment : null
@@ -180,8 +186,8 @@ const Appointments = ({}) => {
       <List>
         {appointments.map(appointment => {
           return (
-            <Appointment key={appointment.booking_date} 
-              appointmentDate={appointment.booking_date} 
+            <Appointment key={appointment.time} 
+              appointmentDate={appointment.time} 
               id={appointment.id}
               setAppId={setAppId}
               triggerMessage={triggerMessage}

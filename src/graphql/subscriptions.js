@@ -8,12 +8,8 @@ export const onCreateUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
       }
@@ -27,12 +23,8 @@ export const onUpdateUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
       }
@@ -46,14 +38,97 @@ export const onDeleteUser = /* GraphQL */ `
       patients {
         items {
           id
-          title
-          firstname
-          lastname
-          dob
-          gender
           userID
+          memberID
         }
         nextToken
+      }
+    }
+  }
+`;
+export const onCreateUserMember = /* GraphQL */ `
+  subscription OnCreateUserMember {
+    onCreateUserMember {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
+      }
+    }
+  }
+`;
+export const onUpdateUserMember = /* GraphQL */ `
+  subscription OnUpdateUserMember {
+    onUpdateUserMember {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
+      }
+    }
+  }
+`;
+export const onDeleteUserMember = /* GraphQL */ `
+  subscription OnDeleteUserMember {
+    onDeleteUserMember {
+      id
+      userID
+      memberID
+      user {
+        id
+        patients {
+          nextToken
+        }
+      }
+      member {
+        id
+        title
+        firstname
+        lastname
+        dob
+        gender
+        users {
+          nextToken
+        }
+        appointments {
+          nextToken
+        }
       }
     }
   }
@@ -67,17 +142,18 @@ export const onCreatePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -94,17 +170,18 @@ export const onUpdatePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -121,17 +198,18 @@ export const onDeletePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      userID
-      user {
-        id
-        patients {
-          nextToken
+      users {
+        items {
+          id
+          userID
+          memberID
         }
+        nextToken
       }
       appointments {
         items {
           id
-          booking_date
+          time
           patientID
         }
         nextToken
@@ -143,7 +221,10 @@ export const onCreateAppointment = /* GraphQL */ `
   subscription OnCreateAppointment {
     onCreateAppointment {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -152,9 +233,8 @@ export const onCreateAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -167,7 +247,10 @@ export const onUpdateAppointment = /* GraphQL */ `
   subscription OnUpdateAppointment {
     onUpdateAppointment {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -176,9 +259,8 @@ export const onUpdateAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken
@@ -191,7 +273,10 @@ export const onDeleteAppointment = /* GraphQL */ `
   subscription OnDeleteAppointment {
     onDeleteAppointment {
       id
-      booking_date
+      time
+      status {
+        category
+      }
       patientID
       patient {
         id
@@ -200,9 +285,8 @@ export const onDeleteAppointment = /* GraphQL */ `
         lastname
         dob
         gender
-        userID
-        user {
-          id
+        users {
+          nextToken
         }
         appointments {
           nextToken

@@ -7,6 +7,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import PeopleIcon from '@material-ui/icons/People'
 import EditIcon from '@material-ui/icons/Edit'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import EventIcon from '@material-ui/icons/Event'
 
 const useStyles = makeStyles(theme => ({
@@ -26,15 +27,23 @@ export default () => {
   return (
     <Paper className={classes.root} elevation={3}>
       <List>
+      <ListItem>
+          <ListItemIcon>
+            <AccountCircleIcon color="primary"/>
+          </ListItemIcon>
+          <ListItemText
+            primary="Our online booking allows you to book on behalf of your family members. 
+            Each login is a booking proxy. A patient can be managed by more than one proxy. In other words, both
+            parents can be a booking proxy for their children."
+          />
+        </ListItem>        
         <ListItem>
           <ListItemIcon>
             <PeopleIcon color="primary"/>
           </ListItemIcon>
           <ListItemText
-            primary="Our online booking allows you to book on behalf of your family members. 
-            To book for a consultation, you first need to create a record for each patient, including yourself. 
-            Click Patients button to create patient records. Please ensure you are authorised 
-            to book on their behalves."
+            primary="To book for a consultation, you first need to create a record for each patient, including yourself. 
+            Click Patients button to create patient records. Please ensure you are authorised to book on their behalves."
           />
         </ListItem>
         <ListItem>
@@ -53,7 +62,8 @@ export default () => {
             <EventIcon color="primary"/>
           </ListItemIcon>               
           <ListItemText
-            primary="Once appointments are booked, you can cancel the appointments online if the patient cannot attend their appointments."
+            primary="Once appointments are booked, you can cancel the appointments online if the patient cannot attend their appointments.
+            A booking for a child created by the father can be cancelled by the mother and vice versa."
           />
         </ListItem>
       </List>
