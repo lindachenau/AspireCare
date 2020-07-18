@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography'
 import Message from '../components/message'
 import { getUser as getAppUser} from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
-import { getUser, getPatient, listAppointments }  from '../graphql/queries'
+import { getUser, getPatient, getAppointment }  from '../graphql/queries'
 import { deleteAppointment } from '../graphql/mutations'
 
 const useStyles = makeStyles(theme => ({
@@ -107,28 +107,33 @@ const Appointments = ({}) => {
       const patient = patients.length > 0 ? patients[curPatient] : null
       if (patient) {
         try {
-          const appointments = await API.graphql(graphqlOperation(listAppointments, {
-            filter: {
-              patientID: {
-                eq: patient.id
+          const appointmentIds = patient.appointments.items.map(item => item.id)
+
+          Promise.allSettled(appointmentIds.map(id => {
+            return API.graphql(graphqlOperation(getAppointment, {id: id}))
+          }))
+          .then((results) => {
+            let appointments = []
+            results.forEach(result => {
+              if (result.status === 'fulfilled') {
+                appointments.push(result.value.data.getAppointment)
               }
-            },
-            limit: 20
-          }))
+            })
 
-          const now = new Date()
-          setAppointments(appointments.data.listAppointments.items.filter(appointment => {
-            const slot = new Date(appointment.time)
+            const now = new Date()
+            setAppointments(appointments.filter(appointment => {
+              const slot = new Date(appointment.time)
+  
+              if (appointmentStatus === 'current')
+                return (slot > now) ? appointment : null
+              else
+                return (slot <= now) ? appointment : null
+            }))            
 
-            if (appointmentStatus === 'current')
-              return (slot > now) ? appointment : null
-            else
-              return (slot <= now) ? appointment : null
-          }))
-
+          })
         } catch (err) {
-          console.log(console.log('Amplify listAppointments error...: ', err))
-        }
+          console.log('Amplify getAppointment error...: ', err)
+        }          
       }
     }
     

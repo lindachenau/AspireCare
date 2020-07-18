@@ -35,7 +35,8 @@ const useStyles = makeStyles(theme => ({
   }  }))
 
 const AppBrowser = () => {
-  const bp_server = process.env.GATSBY_BP_SERVER
+  // const bp_server = process.env.GATSBY_BP_SERVER
+  const bp_server = process.env.GATSBY_AWS_BP_SIMULATOR
   const classes = useStyles()
   const [appData, setAppData] = useState([])
   const [startDate, setStartDate] = useState(new Date())
