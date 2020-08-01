@@ -20,7 +20,6 @@ export default () => {
       const userInfo = getAppUser()
       try {
         const user = await API.graphql(graphqlOperation(getUser, {id: userInfo.username}))
-      
         const patients = user.data.getUser.patients.items
 
         if (userInfo.checkingBookingStatus) {

@@ -56,8 +56,7 @@ class UpdateUser extends React.Component {
     this.setState({ loading: true })
   
     let user = await Auth.currentAuthenticatedUser()
-    const session = await Auth.userSession(user)
-    user.Session = session
+    user.Session = user.signInUserSession
     console.log(user)
     await Auth.updateUserAttributes({
       user, 
