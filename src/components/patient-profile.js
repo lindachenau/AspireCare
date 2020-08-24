@@ -126,7 +126,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             autoFocus
             required
             margin="dense"
-            label="First name"
+            label="First name on the medicare card"
             type="text"
             fullWidth
             defaultValue={firstName}

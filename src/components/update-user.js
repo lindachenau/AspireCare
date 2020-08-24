@@ -1,15 +1,17 @@
 import React from 'react'
-import { navigate } from 'gatsby'
-import { Auth } from 'aws-amplify'
 import NumberFormat from 'react-number-format'
 import Button from '@material-ui/core/Button'
-import { AuthForm, Email, ConfirmationCode, CustomAction } from './auth-forms'
+import { AuthForm, Email, } from './auth-forms'
+import { navigate } from 'gatsby'
+import {
+  CognitoUserPool,
+  CognitoUserAttribute
+} from 'amazon-cognito-identity-js'
 
 const initialState = {
   email: '',
   phone_number: '',
   auth_code: '',
-  stage: 0,
   error: '',
   loading: false,
 }
@@ -35,140 +37,140 @@ class UpdateUser extends React.Component {
       error: '',
     })
   }
+ 
+  // updateAttributes = async e => {
+  //   e.preventDefault()
+  //   const { email, phone_number } = this.state
+  //   this.setState({ loading: true })
+  
+  //   let user = await Auth.currentAuthenticatedUser()
+  //   user.Session = user.signInUserSession
+  //   console.log(user)
+  //   await Auth.updateUserAttributes({
+  //     user, 
+  //     attributes: { email, phone_number },
+  //   })
+  //   this.setState({ stage: 1, loading: false }) 
+  // }
 
-  confirmReset = async e => {
-    e.preventDefault()
-    const { email, auth_code, password } = this.state
-    this.setState({ loading: true })
-    Auth.forgotPasswordSubmit(email, auth_code, password)
-      .then(data => {
-        this.setState({ loading: false })
-      })
-      .then(() => navigate('/signin'))
-      .catch(err => {
-        console.log(err)
-        this.setState({ error: err, loading: false })
-      })
-  }
   updateAttributes = async e => {
     e.preventDefault()
     const { email, phone_number } = this.state
     this.setState({ loading: true })
+
+    const poolData = {
+      UserPoolId: 'ap-southeast-2_vSlGDgdH9',
+      ClientId: '6emoisvvj2gnmhiauoqgneirnq', 
+    }
   
-    let user = await Auth.currentAuthenticatedUser()
-    user.Session = user.signInUserSession
-    console.log(user)
-    await Auth.updateUserAttributes({
-      user, 
-      attributes: { email, phone_number },
-    })
-    this.setState({ stage: 1, loading: false }) 
-  }
+    const userPool = new CognitoUserPool(poolData)
+    // const username = getAppUser().username
+    // const userData = {
+    //   Username: username,
+    //   Pool: userPool,
+    // }
+    
+    // const cognitoUser = new CognitoUser(userData)
+    
+    // const authenticationData = {
+    //   Username: username,
+    //   Password: 'Dennis26',
+    // }
+    // const authenticationDetails = new AuthenticationDetails(
+    //   authenticationData
+    // )
 
-  resendCode = async e => {
-    e.preventDefault()
-    const { email } = this.state
-    this.setState({ loading: true })
-    try {
-      await Auth.resendSignUp(email)
-      this.setState({ stage: 1, loading: false })
-    } catch (err) {
-      this.setState({ error: err, loading: false })
-      console.log('error resending code...', err)
-    }
-  }
+    // await cognitoUser.authenticateUser(authenticationDetails, {
+    //   onSuccess: function(result) {
+    //     const accessToken = result.getAccessToken().getJwtToken()
+    //     AWS.config.region = 'ap-southeast-2'
+    //     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    //       IdentityPoolId: 'ap-southeast-2:ed0ebfe4-0a37-47f7-8dc1-ba8eec16e65a', // your identity pool id here
+    //       Logins: {
+    //         // Change the key below according to the specific region your user pool is in.
+    //         'cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_vSlGDgdH9': result
+    //           .getIdToken()
+    //           .getJwtToken(),
+    //       },
+    //     })
+  
+    //     //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
+    //     AWS.config.credentials.refresh(error => {
+    //       if (error) {
+    //         console.error(error)
+    //       } else {
+    //         console.log('Successfully logged!')
+    //       }
+    //     })
+    //   },
+  
+    //   onFailure: function(err) {
+    //     alert('authentication error', err.message || JSON.stringify(err));
+    //   },
+    // })
+  
+    const authenticatedUser = await userPool.getCurrentUser()
 
-  verify = async e => {
-    e.preventDefault()
-    const { email, auth_code } = this.state
-    this.setState({ loading: true })
-    try {
-      await Auth.verifyCurrentUserAttributeSubmit(email, auth_code)
-      this.setState({ loading: false })
-      navigate('/signin')
-    } catch (err) {
-      this.setState({ error: err, loading: false })
-      console.log('error updating...', err)
+    if (authenticatedUser != null) {
+      authenticatedUser.getSession(function(err, session) {
+        if (err) {
+          alert(err)
+          return
+        }
+        console.log('session validity: ' + session.isValid())
+        let attributeList = []
+    
+        const attribute = new CognitoUserAttribute({
+          Name: 'phone_number',
+          Value: phone_number,
+        })
+        
+        attributeList.push(attribute)   
+    
+        authenticatedUser.updateAttributes(attributeList, function(err, result) {
+          if (err) {
+            alert(err.message || JSON.stringify(err))
+            return
+          }
+          console.log('call result: ' + result)
+        })
+      })
     }
-  }
 
-  confirmSignUp = async e => {
-    e.preventDefault()
-    this.setState({ loading: true })
-    const { email, auth_code } = this.state
-    try {
-      this.setState({ loading: true })
-      await Auth.confirmSignUp(email, auth_code)
-      this.setState({ loading: false })
-      navigate('/signin')
-    } catch (err) {
-      this.setState({ error: err, loading: false })
-      console.log('error confirming signing up...', err)
-    }
-  }
+    this.setState({ loading: false })
+    alert('Updates successful')
+    navigate('/')
+  }  
 
   render() {
-    if (this.state.stage === 0) {
-      return (
-        <AuthForm title="Update user account" error={this.state.error}>
-          <Email
-            handleUpdate={this.handleUpdate}
-            email={this.state.email}
-            autoComplete="off"
-          />
-          <div className="form-group">
-            <NumberFormat
-              placeholder="+61 4## ### ###"
-              onChange={this.handleUpdate}
-              name="phone_number"
-              value={this.state.phone_number}
-              type="tel"
-              className="form-control"
-              format="+614########"
-              mask="_"
-            />
-          </div>
-          <Button
-            onClick={e => this.updateAttributes(e)}
-            type="submit"
-            color="primary"
-            fullWidth
-            variant="contained"
-            disabled={this.state.loading}
-          >
-            {this.state.loading ? null : 'Update Account'}
-            {this.state.loading && (
-              <span
-                className="spinner-border spinner-border-sm"
-                role="status"
-                aria-hidden="true"
-              />
-            )}
-          </Button>
-        </AuthForm>
-      )
-    }
     return (
-      <AuthForm>
+      <AuthForm title="Update user account" error={this.state.error}>
         <Email
           handleUpdate={this.handleUpdate}
           email={this.state.email}
           autoComplete="off"
         />
-        <ConfirmationCode
-          handleUpdate={this.handleUpdate}
-          auth_code={this.state.auth_code}
-          autoComplete="off"
-        />
+        <div className="form-group">
+          <NumberFormat
+            placeholder="+61 4## ### ###"
+            onChange={this.handleUpdate}
+            name="phone_number"
+            value={this.state.phone_number}
+            type="tel"
+            className="form-control"
+            format="+614########"
+            mask="_"
+          />
+        </div>
         <Button
-          onClick={e => this.confirmSignUp(e)}
+          onClick={e => this.updateAttributes(e)}
           type="submit"
           color="primary"
-          variant="contained"
           fullWidth
+          variant="contained"
           disabled={this.state.loading}
-        >        
-          {this.state.loading ? null : 'Confirm'}
+        >
+          {this.state.loading ? null : 'Update Account'}
           {this.state.loading && (
             <span
               className="spinner-border spinner-border-sm"
@@ -177,13 +179,6 @@ class UpdateUser extends React.Component {
             />
           )}
         </Button>
-        <CustomAction
-          padding={10}
-          question="Lost your code?"
-          action="Resend Code"
-          cb={e => this.resendCode(e)}
-          disabled={this.state.loading}
-        /> 
       </AuthForm>
     )
   }
