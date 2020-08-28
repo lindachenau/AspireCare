@@ -1,0 +1,43 @@
+type User @model {
+  id: String!
+  patients: [UserMember] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type UserMember
+  @model(queries: null)
+  @key(name: "byUser", fields: ["userID", "memberID"])
+  @key(name: "byMember", fields: ["memberID", "userID"]) {
+  id: ID!
+  userID: String!
+  memberID: String!
+  user: User! @connection(fields: ["userID"])
+  member: Patient! @connection(fields: ["memberID"])
+}
+
+type Patient @model {
+  id: String!
+  title: String!
+  firstname: String!
+  lastname: String!
+  dob: String!
+  gender: String!
+  bpPatientId: int
+  users: [UserMember] @connection(keyName: "byMember", fields: ["id"])
+  appointments: [Appointment] @connection(keyName: "appointmentsByPatient", fields: ["id"])
+}
+
+type Appointment @model 
+  @key(name: "appointmentsByPatient", fields: ["patientID", "time"]){
+  id: String!
+  time: String!
+  status: BookingStatus
+  patientID: String!
+  bpAppointmentId: int
+  patient: Patient! @connection(fields: ["patientID"])
+}
+
+type BookingStatus {
+  category: Category
+}
+
+enum Category { booked, arrived, completed, cancelled }
