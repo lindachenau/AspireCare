@@ -48,8 +48,8 @@ export default function Message({theme, message, action, cb, triggerOpen, initOp
   }
 
   const doAction = () => {
-    cb()
     setOpen(false)
+    cb()
   }
 
   return (

@@ -38,6 +38,7 @@ class UpdateUser extends React.Component {
     })
   }
  
+  // Calling Auth.updateUserAttributes will stop graphql from working. Only removing API and adding it back can get graphql working again.
   // updateAttributes = async e => {
   //   e.preventDefault()
   //   const { email, phone_number } = this.state
@@ -59,56 +60,12 @@ class UpdateUser extends React.Component {
     this.setState({ loading: true })
 
     const poolData = {
-      UserPoolId: 'ap-southeast-2_vSlGDgdH9',
-      ClientId: '6emoisvvj2gnmhiauoqgneirnq', 
+      UserPoolId: process.env.GATSBY_COGNITO_USER_POOL_ID,
+      ClientId: process.env.GATSBY_COGNITO_CLIENT_ID, 
     }
   
     const userPool = new CognitoUserPool(poolData)
-    // const username = getAppUser().username
-    // const userData = {
-    //   Username: username,
-    //   Pool: userPool,
-    // }
     
-    // const cognitoUser = new CognitoUser(userData)
-    
-    // const authenticationData = {
-    //   Username: username,
-    //   Password: 'Dennis26',
-    // }
-    // const authenticationDetails = new AuthenticationDetails(
-    //   authenticationData
-    // )
-
-    // await cognitoUser.authenticateUser(authenticationDetails, {
-    //   onSuccess: function(result) {
-    //     const accessToken = result.getAccessToken().getJwtToken()
-    //     AWS.config.region = 'ap-southeast-2'
-    //     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    //       IdentityPoolId: 'ap-southeast-2:ed0ebfe4-0a37-47f7-8dc1-ba8eec16e65a', // your identity pool id here
-    //       Logins: {
-    //         // Change the key below according to the specific region your user pool is in.
-    //         'cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_vSlGDgdH9': result
-    //           .getIdToken()
-    //           .getJwtToken(),
-    //       },
-    //     })
-  
-    //     //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-    //     AWS.config.credentials.refresh(error => {
-    //       if (error) {
-    //         console.error(error)
-    //       } else {
-    //         console.log('Successfully logged!')
-    //       }
-    //     })
-    //   },
-  
-    //   onFailure: function(err) {
-    //     alert('authentication error', err.message || JSON.stringify(err));
-    //   },
-    // })
-  
     const authenticatedUser = await userPool.getCurrentUser()
 
     if (authenticatedUser != null) {
@@ -120,12 +77,21 @@ class UpdateUser extends React.Component {
         console.log('session validity: ' + session.isValid())
         let attributeList = []
     
-        const attribute = new CognitoUserAttribute({
-          Name: 'phone_number',
-          Value: phone_number,
-        })
-        
-        attributeList.push(attribute)   
+        if (phone_number) {
+          const attribute = new CognitoUserAttribute({
+            Name: 'phone_number',
+            Value: phone_number,
+          })
+          attributeList.push(attribute)
+        }
+
+        if (email) {
+          const attribute = new CognitoUserAttribute({
+            Name: 'email',
+            Value: email,
+          })
+          attributeList.push(attribute)
+        }        
     
         authenticatedUser.updateAttributes(attributeList, function(err, result) {
           if (err) {

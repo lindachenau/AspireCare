@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { navigate } from 'gatsby'
 import DrAppCard from './doctor-app-card'
 import { MDBRow } from 'mdbreact'
@@ -47,30 +47,35 @@ const AppBrowser = () => {
   const [triggerMessage, setTriggerMessage] = useState(false)
   const message = `You need to login to book ${appId}. Press the Proceed button to Login or Create new account.`
   
-  useLayoutEffect(() => {
+  useEffect(() => {
+    
     const fetchApps = async () => {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: bp_server,
-        data: {
-          startDate: moment(startDate).format("YYYY-MM-DD"),
-          numDays: numDays
+      if (numDays > 0) {
+        const config = {
+          method: 'post',
+          headers: {"Content-Type": "application/json"},
+          url: bp_server,
+          data: {
+            startDate: moment(startDate).format("YYYY-MM-DD"),
+            numDays: numDays
+          }
         }
+        setLoading(true)
+        const response = await axios(config)
+        setAppData(response.data)
+        setLoading(false)
+        console.log("Fetching appointments")
       }
-
-      const response = await axios(config)
-      setAppData(response.data)
     }
-    setLoading(true)
+
     fetchApps()
-    setLoading(false)
 
   }, [startDate, numDays, bp_server])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     //narrow screen display 4 columns only. Need to check whether it works for iPad or not
-    setImmediate(() => setNumDays(window.innerWidth >= 992 ? 5 : 4))
+    setNumDays(window.innerWidth >= 992 ? 5 : 4)
+    console.log("Setting column width")
   }, [])
 
   useEffect(() => {
@@ -127,21 +132,23 @@ const AppBrowser = () => {
       >
         <ArrowForwardIosIcon />
       </IconButton>
-      {loading && <div className={classes.progress}><CircularProgress color='primary' /></div>}             
-      <MDBRow>
-        {appData.map(doctor => (
-          <DrAppCard 
-            key={doctor.bpId}
-            isLoading={loading}
-            drId={doctor.bpId}
-            title={doctors[doctor.bpId].title}
-            avatar={doctors[doctor.bpId].avatar}
-            job={doctors[doctor.bpId].job}
-            appointments={doctor.appointments}
-            setAppId={id => openMessage(id)}
-          />
-        ))}
-      </MDBRow>
+      {loading ? 
+        <div className={classes.progress}><CircularProgress color='primary' /></div>
+        :           
+        <MDBRow>
+          {appData.map(doctor => (
+            <DrAppCard 
+              key={doctor.bpId}
+              isLoading={loading}
+              drId={doctor.bpId}
+              title={doctors[doctor.bpId].title}
+              avatar={doctors[doctor.bpId].avatar}
+              job={doctors[doctor.bpId].job}
+              appointments={doctor.appointments}
+              setAppId={id => openMessage(id)}
+            />
+          ))}
+        </MDBRow>}
       <Message 
         triggerOpen={triggerMessage} 
         initOpen={false}

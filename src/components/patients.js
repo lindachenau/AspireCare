@@ -13,9 +13,11 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import Button from '@material-ui/core/Button'
 import PatientForms from './patient-forms'
+import Message from './message'
 import { getUser as getAppUser, setUser } from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient }  from '../graphql/queries'
+import { deleteUserMember } from '../graphql/mutations'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +39,17 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
+const Patient = ({
+  name, 
+  dob, 
+  id,
+  patientIndex, 
+  setPatient, 
+  setPatStage,
+  triggerMessage,
+  setTriggerMessage,
+  setPatIndexToBeDeleted
+}) => {
 
   const bookAppointment = () => {
     //Save the selected patient
@@ -61,6 +73,11 @@ const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
     setPatStage(1)
   }
 
+  const removeExistingPatient = () => {
+    setTriggerMessage(!triggerMessage)
+    setPatIndexToBeDeleted(patientIndex)
+  }
+
   return (
     <ListItem>
       <ListItemText
@@ -73,7 +90,7 @@ const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
         </IconButton>
       </ListItemIcon>
       <ListItemIcon>
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={removeExistingPatient}>
           <DeleteIcon />
         </IconButton>
       </ListItemIcon>
@@ -81,7 +98,7 @@ const Patient = ({name, dob, id, patientIndex, setPatient, setPatStage}) => {
         <IconButton edge="end" aria-label="book" onClick={bookAppointment}>
           <ArrowForwardIosIcon />
         </IconButton>
-      </ListItemIcon>       
+      </ListItemIcon>
     </ListItem>
   )
 }
@@ -123,6 +140,8 @@ const Patients = ({patStage, setPatStage}) => {
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState(null)
   const [triggerFetchPatients, setTriggerFetchPatients] = useState(false)
+  const [triggerMessage, setTriggerMessage] = useState(false)
+  const [patIndexToBeDeleted, setPatIndexToBeDeleted] = useState(null)
   const classes = useStyles()
 
   useEffect(() => {
@@ -131,10 +150,16 @@ const Patients = ({patStage, setPatStage}) => {
       try {
         const user = await API.graphql(graphqlOperation(getUser, {id: username}))
         const members = user.data.getUser.patients.items
-        const patientIds = members.map(member => member.memberID)
+        let patientIds = []
+        members.forEach(member => {
+          patientIds.push({
+            patientId: member.memberID,
+            userMemberId: member.id
+          })
+        })
         
         Promise.allSettled(patientIds.map(id => {
-          return API.graphql(graphqlOperation(getPatient, {id: id}))
+          return API.graphql(graphqlOperation(getPatient, {id: id.patientId}))
         }))
         .then((results) => {
           let pats = []
@@ -143,6 +168,11 @@ const Patients = ({patStage, setPatStage}) => {
               pats.push(result.value.data.getPatient)
             }
           })
+
+          pats.forEach((pat, index, pats) => {
+            pats[index].userMemberId = patientIds[index].userMemberId
+          })
+
           setPatients(pats)
         })
       } catch (err) {
@@ -164,6 +194,21 @@ const Patients = ({patStage, setPatStage}) => {
     setPatStage(1)
   }
 
+  const removeExistingPatient = async () => {
+    try {
+      const userMemberId = patients[patIndexToBeDeleted].userMemberId
+      await API.graphql(graphqlOperation(deleteUserMember, {
+        input: {
+          id: userMemberId
+        }}))
+    } catch (err) {
+      console.log('Amplify deleteUserMember error...: ', err)
+      return
+    }
+
+    setTriggerFetchPatients(!triggerFetchPatients)
+  }    
+
   return (
     <>
       {patStage === 0 && 
@@ -179,6 +224,9 @@ const Patients = ({patStage, setPatStage}) => {
               patientIndex={index}
               setPatient={setPatient}
               setPatStage={setPatStage}
+              triggerMessage={triggerMessage}
+              setTriggerMessage={setTriggerMessage}
+              setPatIndexToBeDeleted={setPatIndexToBeDeleted}
             />
           ))}
           <ListItemIcon>
@@ -187,6 +235,14 @@ const Patients = ({patStage, setPatStage}) => {
             </IconButton>
           </ListItemIcon>  
         </List>
+        <Message 
+          triggerOpen={triggerMessage} 
+          initOpen={false}
+          message='Remove this patient from your booking management?'
+          action="Confirm"
+          cb={removeExistingPatient}
+          disableClose={false}
+        />                             
       </Paper>}
       {patStage === 1 && 
       <>

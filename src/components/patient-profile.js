@@ -55,7 +55,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
 
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
-    const patientId = `${firstName} ${lastName} ${dob} ${gender}`
+    const patientId = `${firstName.toUpperCase()} ${lastName.toUpperCase()} ${dob} ${gender}`
     const username = getUser().username
     const existingPatient = await API.graphql(graphqlOperation(getPatient, {id: patientId}))
 
@@ -148,8 +148,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
               margin="normal"
               id="date-picker-dialog"
               format="dd/MM/yyyy"
-              margin="normal"
-              label="DOB"
+              label="DOB(dd/MM/yyyy)"
               value={dOB}
               onChange={setDOB}
               KeyboardButtonProps={{
@@ -182,7 +181,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             onClick={handleSave} 
             color="primary" 
             fullWidth
-            disabled={!(title != "" && firstName && lastName && dOB && gender != "")}
+            disabled={!(title !== "" && firstName && lastName && dOB && gender !== "")}
           >
             Save
           </Button>

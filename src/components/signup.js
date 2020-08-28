@@ -101,7 +101,7 @@ class SignUp extends React.Component {
   render() {
     if (this.state.stage === 0) {
       return (
-        <AuthForm title="Create a new account to book" error={this.state.error}>
+        <AuthForm title="Create a new account" error={this.state.error}>
           <Email
             handleUpdate={this.handleUpdate}
             email={this.state.email}
