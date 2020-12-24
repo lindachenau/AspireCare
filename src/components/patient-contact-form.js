@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Button from '@material-ui/core/Button'
-import InputLabel from '@material-ui/core/InputLabel'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
+import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
-import NumberFormat from 'react-number-format'
+import LocationSearchInput from './location-search-input'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -21,11 +21,13 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function MedicareForm({theme, triggerOpen, initOpen}) {
+export default function PatientContactForm({theme, triggerOpen, initOpen}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
-  const [medicareNo, setMedicareNo] = useState("")
-  const [iRN, setIRN] = useState("")
+  const [address, setAddress] = useState('')
+  const [mobile, setMobile] = useState('')
+  const [homeNumber, setHomeNumber] = useState('')
+  const [workNumber, setWorkNumber] = useState('')
   
   const classes = useStyles(theme)
 
@@ -39,6 +41,10 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
     }
   }, [triggerOpen, initOpen])
 
+  const onChangeLocation = address => {
+    setAddress(address.replace(', Australia', ''))
+  }
+
   const handleSave = () => {
     setOpen(false)
   }
@@ -50,33 +56,36 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
           <CloseIcon />
         </IconButton>               
         <DialogContent>
-          <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Medicare</h3>
-          <div className="form-group pb-1">
-            <InputLabel>Medicare number*</InputLabel>
-            <NumberFormat
-              placeholder="xxxx xxxxx x"
-              onChange={(event) => setMedicareNo(event.target.value)}
-              name="medicare_number"
-              value={medicareNo}
-              type="tel"
-              className="form-control"
-              format="#### ##### #"
-              mask="_"
-            />
-          </div>
-          <div className="form-group">
-            <InputLabel>Individual reference number* (the number before the patient's name)</InputLabel>
-            <NumberFormat
-              placeholder="x"
-              onChange={(event) => setIRN(event.target.value)}
-              name="line_number"
-              value={iRN}
-              type="tel"
-              className="form-control"
-              format="#"
-              mask="_"
-            />
-          </div>
+          <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Address & Contact</h3>
+          <LocationSearchInput
+              address={address} 
+              changeAddr={onChangeLocation}
+          />
+          <TextField
+            required
+            margin="dense"
+            label="Mobile phone number"
+            type="tel"
+            fullWidth
+            defaultValue={mobile}
+            onChange={(event) => setMobile(event.target.value.trim())}
+          />
+          <TextField
+            margin="dense"
+            label="Home phone number"
+            type="tel"
+            fullWidth
+            defaultValue={homeNumber}
+            onChange={(event) => setHomeNumber(event.target.value.trim())}
+          />
+          <TextField
+            margin="dense"
+            label="Work phone number"
+            type="tel"
+            fullWidth
+            defaultValue={workNumber}
+            onChange={(event) => setWorkNumber(event.target.value.trim())}
+          />                              
         </DialogContent>
         <DialogActions className={classes.button}>
           <Button 
@@ -84,7 +93,7 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
             onClick={handleSave} 
             color="primary" 
             fullWidth
-            disabled={!(medicareNo && iRN)}
+            disabled={!(address && mobile)}
           >
             Save
           </Button>

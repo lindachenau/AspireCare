@@ -13,11 +13,13 @@ import {
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 import { API, graphqlOperation } from 'aws-amplify'
 import { createPatient, createUserMember } from '../graphql/mutations'
-import { getPatient } from '../graphql/queries'
+import { getUser, getPatient } from '../graphql/queries'
 import moment from 'moment'
-import { getUser } from './app-user'
+import { getUser as getAppUser} from './app-user'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -26,10 +28,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: 20,
     marginBottom: 20
   },
-  container: {
-    maxWidth: 400,
-    margin: "auto"
-  }
+  close: {
+    justifyContent: "flex-end"
+  }  
 }))
 
 export default function ProfileForm({theme, triggerOpen, initOpen}) {
@@ -55,8 +56,8 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
 
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
-    const patientId = `${firstName.toUpperCase()} ${lastName.toUpperCase()} ${dob} ${gender}`
-    const username = getUser().username
+    const patientId = `${firstName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${lastName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${dob} ${gender}`
+    const username = getAppUser().username
     const existingPatient = await API.graphql(graphqlOperation(getPatient, {id: patientId}))
 
     if (!existingPatient.data.getPatient) {
@@ -67,7 +68,8 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             firstname: firstName,
             lastname: lastName,
             dob: dob,
-            gender: gender
+            gender: gender,
+            createdBy: username
           }
       }))
       .then(() => {
@@ -81,16 +83,25 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
       .catch(err => console.log('Amplify createPatient error...: ', err))
     }
     else {
-      //Patient exists already, just add the new agent
-      try {
-        API.graphql(graphqlOperation(createUserMember, {
-          input: {
-            userID: username,
-            memberID: patientId
-          }
-        }))
-      } catch (err) {
-        console.log('Amplify createUserMember error...: ', err)
+      //Check if this patient is already under management
+      const user = await API.graphql(graphqlOperation(getUser, {id: username}))
+      const members = user.data.getUser.patients.items
+      const managedPatients = members.map(member => member.memberID)
+
+      if (!managedPatients.includes(patientId)) {
+        //Patient exists already, just add the new agent
+        try {
+          API.graphql(graphqlOperation(createUserMember, {
+            input: {
+              userID: username,
+              memberID: patientId
+            }
+          }))
+        } catch (err) {
+          console.log('Amplify createUserMember error...: ', err)
+        }
+      } else {
+        alert(`${firstName} ${lastName} is already under your management!`)
       }
     }
     
@@ -100,9 +111,13 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
 
   return (
     <>
-      <Dialog className={classes.container} open={open} onBackdropClick={() => setOpen(false)}>
+      <Dialog maxWidth='xs' open={open} onBackdropClick={() => setOpen(false)}>
+        <IconButton edge="start" color="inherit" className={classes.close} onClick={() => setOpen(false)} aria-label="close">
+          <CloseIcon />
+        </IconButton>        
         <DialogContent>
           <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Profile</h3>
+          <p className="pt-2 pb-1 text-center p-responsive" >This profile identifies a patient in our system. Once created, it cannot be changed.</p>
           <FormControl required fullWidth>
             <InputLabel htmlFor="title-native-simple">Title</InputLabel>
             <Select
@@ -123,23 +138,22 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             </Select>
           </FormControl>          
           <TextField
-            autoFocus
             required
             margin="dense"
-            label="First name on the medicare card"
+            label="First name on the Medicare card"
             type="text"
             fullWidth
             defaultValue={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
+            onChange={(event) => setFirstName(event.target.value.trim())}
           />
           <TextField
             required
             margin="dense"
-            label="Last name"
+            label="Last name on the Medicare card"
             type="text"
             fullWidth
             defaultValue={lastName}
-            onChange={(event) => setLastName(event.target.value)}
+            onChange={(event) => setLastName(event.target.value.trim())}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
@@ -183,7 +197,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             fullWidth
             disabled={!(title !== "" && firstName && lastName && dOB && gender !== "")}
           >
-            Save
+            Submit
           </Button>
         </DialogActions>
       </Dialog>

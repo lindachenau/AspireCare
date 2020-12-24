@@ -9,10 +9,6 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    margin: 20
-  },
   button: {
     marginLeft: 15,
     marginRight: 15,

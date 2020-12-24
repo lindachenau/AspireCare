@@ -6,10 +6,11 @@ import Divider from '@material-ui/core/Divider'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import CreditCardIcon from '@material-ui/icons/CreditCard'
-import HomeIcon from '@material-ui/icons/Home'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone'
 import PatientProfile from './patient-profile'
+import MedicareForm from './medicare-form'
+import PatientContactForm from './patient-contact-form'
 
 const useStyles = makeStyles(theme => ({
   pointer: {  
@@ -21,12 +22,29 @@ const useStyles = makeStyles(theme => ({
 const PatientForms = ({patient}) => {
   const classes = useStyles()
   const [triggerProfile, setTriggerProfile] = useState(false)
-  const patientHeading = `Edit ${patient ? patient : "new patient"}'s profile and other information`
+  const [triggerMedicare, setTriggerMedicare] = useState(false)
+  const [triggerContact, setTriggerContact] = useState(false)
+  const patientHeading = patient ? `Edit ${patient}'s patient information` : "Create a new patient profile and edit patient information"
+
+  const checkVerified = () => {
+    return false
+  }
+
+  const editMedicareInfo = () => {
+    if (!checkVerified())
+      setTriggerMedicare(!triggerMedicare)
+  }
+
+  const editContactInfo = () => {
+    if (!checkVerified())
+      setTriggerContact(!triggerContact)
+  }
   
   return (
     <>
       <h3 className={'h3-responsive font-weight-bold text-center pt-5'} >{patientHeading}</h3>
       <List>
+        {!patient && 
         <ListItem className={classes.pointer} alignItems="flex-start" onClick={() => setTriggerProfile(!triggerProfile)}>
           <ListItemIcon>
             <AccountCircleIcon />
@@ -35,9 +53,9 @@ const PatientForms = ({patient}) => {
             primary="Profile"
             secondary="Mandatory patient identity"
           />
-        </ListItem>
+        </ListItem>}
         <Divider variant="inset" component="li" />
-        <ListItem className={classes.pointer} alignItems="flex-start">
+        <ListItem className={classes.pointer} alignItems="flex-start" onClick={editMedicareInfo}>
           <ListItemIcon>
             <CreditCardIcon />
           </ListItemIcon>
@@ -47,23 +65,13 @@ const PatientForms = ({patient}) => {
           />
         </ListItem>
         <Divider variant="inset" component="li" />
-        <ListItem className={classes.pointer} alignItems="flex-start">
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Address"
-            secondary="Optional address details"
-          />
-        </ListItem>
-        <Divider variant="inset" component="li" />
-        <ListItem className={classes.pointer} alignItems="flex-start">
+        <ListItem className={classes.pointer} alignItems="flex-start" onClick={editContactInfo}>
           <ListItemIcon>
             <ContactPhoneIcon />
           </ListItemIcon>
           <ListItemText
-            primary="Contact"
-            secondary="Optional contact details"
+            primary="Address & Contact"
+            secondary="Optional address & contact details"
           />
         </ListItem>
         <Divider variant="inset" component="li" />
@@ -78,6 +86,8 @@ const PatientForms = ({patient}) => {
         </ListItem>                  
       </List>
       <PatientProfile triggerOpen={triggerProfile} initOpen={false} />
+      <MedicareForm triggerOpen={triggerMedicare} initOpen={false} />
+      <PatientContactForm triggerOpen={triggerContact} initOpen={false} />
     </>
   )
 }

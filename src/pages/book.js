@@ -67,13 +67,17 @@ export default () => {
     setValue(event.target.value)
   }  
 
-  const addAppointment = async () => {
+  const addAppointment = async (username) => {
     try {
       await API.graphql(graphqlOperation(createAppointment, {
         input: {
           id: appId,
           time: appId.slice(-19),
-          patientID: patientId
+          patientID: patientId,
+          status: {
+            category: 'booked'
+          },
+          bookedBy: username
         }
       }))
     } catch (err) {
@@ -83,7 +87,7 @@ export default () => {
 
   const book = () => {
     setTriggerMessage(!triggerMessage)
-    addAppointment()
+    addAppointment(getUser().username)
  
     //send confirmation email
     const patient = getUser().patientName
@@ -92,7 +96,7 @@ export default () => {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         email: email,
-        body: `You have booked ${patient} with ${appId} for ${consultationType[value]}.`,
+        body: `You have booked ${patient} with ${appId} for a ${consultationType[value]}.`,
         subject: 'Your booking is confirmed!',
         source: 'sootyyu@gmail.com'   
       })

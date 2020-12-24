@@ -65,6 +65,8 @@ export const onCreateUserMember = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }
@@ -94,6 +96,8 @@ export const onUpdateUserMember = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }
@@ -123,6 +127,8 @@ export const onDeleteUserMember = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }
@@ -142,6 +148,8 @@ export const onCreatePatient = /* GraphQL */ `
       lastname
       dob
       gender
+      createdBy
+      bpPatientId
       users {
         items {
           id
@@ -155,6 +163,8 @@ export const onCreatePatient = /* GraphQL */ `
           id
           time
           patientID
+          bookedBy
+          bpAppointmentId
         }
         nextToken
       }
@@ -170,6 +180,8 @@ export const onUpdatePatient = /* GraphQL */ `
       lastname
       dob
       gender
+      createdBy
+      bpPatientId
       users {
         items {
           id
@@ -183,6 +195,8 @@ export const onUpdatePatient = /* GraphQL */ `
           id
           time
           patientID
+          bookedBy
+          bpAppointmentId
         }
         nextToken
       }
@@ -198,6 +212,8 @@ export const onDeletePatient = /* GraphQL */ `
       lastname
       dob
       gender
+      createdBy
+      bpPatientId
       users {
         items {
           id
@@ -211,6 +227,8 @@ export const onDeletePatient = /* GraphQL */ `
           id
           time
           patientID
+          bookedBy
+          bpAppointmentId
         }
         nextToken
       }
@@ -226,6 +244,8 @@ export const onCreateAppointment = /* GraphQL */ `
         category
       }
       patientID
+      bookedBy
+      bpAppointmentId
       patient {
         id
         title
@@ -233,6 +253,8 @@ export const onCreateAppointment = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }
@@ -252,6 +274,8 @@ export const onUpdateAppointment = /* GraphQL */ `
         category
       }
       patientID
+      bookedBy
+      bpAppointmentId
       patient {
         id
         title
@@ -259,6 +283,8 @@ export const onUpdateAppointment = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }
@@ -278,6 +304,8 @@ export const onDeleteAppointment = /* GraphQL */ `
         category
       }
       patientID
+      bookedBy
+      bpAppointmentId
       patient {
         id
         title
@@ -285,6 +313,8 @@ export const onDeleteAppointment = /* GraphQL */ `
         lastname
         dob
         gender
+        createdBy
+        bpPatientId
         users {
           nextToken
         }

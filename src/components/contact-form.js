@@ -95,7 +95,7 @@ export default function ContactForm({theme, triggerOpen, initOpen}) {
         </IconButton>
         <div className={classes.container}>
           <div className={classes.grow} />
-            <img className={classes.logo} src={logo} alt="DiGi Transform logo" />
+            <img className={classes.logo} src={logo} alt="Aspire Medical Centre Eastwood logo" />
           <div className={classes.grow} />
         </div>
         <DialogContent>

@@ -132,23 +132,20 @@ const AppBrowser = () => {
       >
         <ArrowForwardIosIcon />
       </IconButton>
-      {loading ? 
-        <div className={classes.progress}><CircularProgress color='primary' /></div>
-        :           
-        <MDBRow>
-          {appData.map(doctor => (
-            <DrAppCard 
-              key={doctor.bpId}
-              isLoading={loading}
-              drId={doctor.bpId}
-              title={doctors[doctor.bpId].title}
-              avatar={doctors[doctor.bpId].avatar}
-              job={doctors[doctor.bpId].job}
-              appointments={doctor.appointments}
-              setAppId={id => openMessage(id)}
-            />
-          ))}
-        </MDBRow>}
+      <MDBRow>
+        {appData.map(doctor => (
+          <DrAppCard 
+            key={doctor.bpId}
+            isLoading={loading}
+            drId={doctor.bpId}
+            title={doctors[doctor.bpId].title}
+            avatar={doctors[doctor.bpId].avatar}
+            job={doctors[doctor.bpId].job}
+            appointments={doctor.appointments}
+            setAppId={id => openMessage(id)}
+          />
+        ))}
+      </MDBRow>
       <Message 
         triggerOpen={triggerMessage} 
         initOpen={false}

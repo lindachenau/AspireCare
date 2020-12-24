@@ -8,7 +8,7 @@ export function AuthForm({ children, title, error }) {
       <h2 className="pt-5 pb-3 text-center h2-responsive font-weight-bold" >{title}</h2>
       {error && (
         <p className="text-danger">
-          {error.message ? error.message : error}
+          {error.message ? error.message : JSON.stringify(error)}
         </p>
       )}
       {children}
@@ -16,7 +16,7 @@ export function AuthForm({ children, title, error }) {
   )
 }
 
-export function Email({ handleUpdate, email, autoComplete }) {
+export function Email({ handleUpdate, email, autoComplete, placeholder='email' }) {
   return (
     <div className="form-group">
       <input
@@ -28,24 +28,24 @@ export function Email({ handleUpdate, email, autoComplete }) {
         autoComplete={autoComplete}
         id="enterEmailAddress"
         aria-describedby="emailHelp"
-        placeholder="email"
+        placeholder={placeholder}
       />
     </div>
   )
 }
 
-export function Password({ handleUpdate, password, autoComplete }) {
+export function Password({ handleUpdate, password, autoComplete, name='password', placeholder='password', id='enterPassword' }) {
   return (
     <div className="form-group">
       <input
         onChange={handleUpdate}
         autoComplete={autoComplete}
-        name="password"
+        name={name}
         value={password}
         type="password"
         className="form-control"
-        placeholder="password"
-        id="enterPassword"
+        placeholder={placeholder}
+        id={id}
       />
     </div>
   )

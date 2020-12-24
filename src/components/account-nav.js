@@ -19,7 +19,7 @@ export default ({value, setValue}) => {
       <BottomNavigationAction label="Info" icon={<InfoIcon />} />
       <BottomNavigationAction label="Appointments" icon={<EventIcon />} />
       <BottomNavigationAction label="Patients" icon={<PeopleIcon />} />
-      <BottomNavigationAction label="Account" icon={<AccountCircleIcon />} />
+      <BottomNavigationAction label="Login update" icon={<AccountCircleIcon />} />
     </BottomNavigation>
   )
 }

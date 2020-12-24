@@ -15,11 +15,10 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
 }
 
 // Create post pages programmatically
-exports.createPages = ({ graphql, actions }) => {
+exports.createPages = async ({ graphql, actions }) => {
    const { createPage } = actions
 
-   return new Promise(resolve => {
-      graphql(`
+   await graphql(`
       {
          allMarkdownRemark {
             edges {
@@ -30,18 +29,16 @@ exports.createPages = ({ graphql, actions }) => {
                }
             }
          }
-      }`
-      ).then(result => {
-         result.data.allMarkdownRemark.edges.forEach(({ node }) => {
-            createPage({
-               path: node.fields.slug,
-               component: path.resolve('./src/templates/post.js'),
-               context: {
-                 slug: node.fields.slug,
-               },
-             })
+      }
+   `).then(result => {
+      result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+         createPage({
+            path: node.fields.slug,
+            component: path.resolve('./src/templates/post.js'),
+            context: {
+               slug: node.fields.slug,
+            },
          })
-         resolve()
       })
    })
 }

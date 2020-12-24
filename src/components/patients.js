@@ -112,7 +112,7 @@ const Legend = () => {
           <EditIcon />
         </ListItemIcon>      
         <ListItemText
-          primary="Edit patient profile and other information"
+          primary="Edit new patient profile and patient information before the first appointment"
         />
       </ListItem> 
       <ListItem>

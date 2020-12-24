@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import MemberCard from './member-card'
 import { MDBRow } from 'mdbreact'

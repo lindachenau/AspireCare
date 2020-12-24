@@ -50,6 +50,7 @@ class SignIn extends React.Component {
         }))
 
       } catch (err) {
+        this.setState({ error: err, loading: false })
         console.log('Amplify createUser error...: ', err)
         return        
       }

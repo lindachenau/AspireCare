@@ -69,19 +69,19 @@ class SignUp extends React.Component {
     }
   }
 
-  verify = async e => {
-    e.preventDefault()
-    const { email, auth_code } = this.state
-    this.setState({ loading: true })
-    try {
-      await Auth.verifyCurrentUserAttributeSubmit(email, auth_code)
-      this.setState({ loading: false })
-      navigate('/signin')
-    } catch (err) {
-      this.setState({ error: err, loading: false })
-      console.log('error signing up...', err)
-    }
-  }
+  // verify = async e => {
+  //   e.preventDefault()
+  //   const { email, auth_code } = this.state
+  //   this.setState({ loading: true })
+  //   try {
+  //     await Auth.verifyCurrentUserAttributeSubmit(email, auth_code)
+  //     this.setState({ loading: false })
+  //     navigate('/signin')
+  //   } catch (err) {
+  //     this.setState({ error: err, loading: false })
+  //     console.log('error signing up...', err)
+  //   }
+  // }
 
   confirmSignUp = async e => {
     e.preventDefault()
@@ -98,6 +98,10 @@ class SignUp extends React.Component {
     }
   }
 
+  /* Currently, the default Input component is forcefully setting autoComplete="off" which doesn't disable Chrome's 
+  * autofill functionality on latest browser versions. For achieving that, we need to pass autoComplete="new-password" 
+  * https://github.com/JedWatson/react-select/issues/3500
+  */
   render() {
     if (this.state.stage === 0) {
       return (
@@ -105,22 +109,22 @@ class SignUp extends React.Component {
           <Email
             handleUpdate={this.handleUpdate}
             email={this.state.email}
-            autoComplete="off"
+            autoComplete="new-password"
           />
           <Password
             handleUpdate={this.handleUpdate}
             password={this.state.password}
-            autoComplete="off"
+            autoComplete="new-password"
           />
           <div className="form-group">
             <NumberFormat
-              placeholder="+61 4## ### ###"
+              placeholder="+61 4xx xxx xxx"
               onChange={this.handleUpdate}
               name="phone_number"
               value={this.state.phone_number}
               type="tel"
               className="form-control"
-              format="+614########"
+              format="+61 4## ### ###"
               mask="_"
             />
           </div>

@@ -6,6 +6,7 @@ import Carousel from '../components/carousel'
 import Features from '../components/features'
 import Card from '../components/card'
 import { MDBRow } from 'mdbreact'
+import Bulletin from '../components/bulletin'
 
 const imgList = [
   {
@@ -62,6 +63,7 @@ class App extends Component {
             </section>
           </main>
         </Layout>
+        <Bulletin/>
       </>
     )
   }

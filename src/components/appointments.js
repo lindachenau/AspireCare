@@ -19,7 +19,7 @@ import Message from '../components/message'
 import { getUser as getAppUser} from './app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient, getAppointment }  from '../graphql/queries'
-import { deleteAppointment } from '../graphql/mutations'
+import { updateAppointment } from '../graphql/mutations'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -104,6 +104,7 @@ const Appointments = ({}) => {
 
   useEffect(() => {
     const getAppointmentsByPatient = async () => {
+      console.log('Patients', patients)
       const patient = patients.length > 0 ? patients[curPatient] : null
       if (patient) {
         try {
@@ -113,8 +114,10 @@ const Appointments = ({}) => {
             return API.graphql(graphqlOperation(getAppointment, {id: id}))
           }))
           .then((results) => {
+            console.log('Appointments', results)
             let appointments = []
             results.forEach(result => {
+              //Fulfilled promises 
               if (result.status === 'fulfilled') {
                 appointments.push(result.value.data.getAppointment)
               }
@@ -124,6 +127,10 @@ const Appointments = ({}) => {
             setAppointments(appointments.filter(appointment => {
               const slot = new Date(appointment.time)
   
+              if (appointment.status.category === 'cancelled')
+                return null
+
+              //Current radio button pressed
               if (appointmentStatus === 'current')
                 return (slot > now) ? appointment : null
               else
@@ -143,13 +150,16 @@ const Appointments = ({}) => {
 
   const confirmCancelling = async () => {
     try {
-      await API.graphql(graphqlOperation(deleteAppointment, {
+      await API.graphql(graphqlOperation(updateAppointment, {
         input: {
-          id: appId
+          id: appId,
+          status: {
+            category: 'cancelled'
+          }
         }
       }))
     } catch (err) {
-      console.log(console.log('Amplify deleteAppointment error...: ', err))
+      console.log(console.log('Amplify updateAppointment error...: ', err))
     }
     setTriggerFetchPatients(!triggerFetchPatients)
   }  

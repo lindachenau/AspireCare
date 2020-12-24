@@ -28,7 +28,7 @@ const Navbar = () => {
       <MDBContainer>
         <Link className="waves-effect waves-light" to='/' style={{display: 'flex', alignItems: 'center'}}>
           <img height={100} src={Logo} className="mr-3" alt="DiGi Transform logo" />
-          </Link>
+        </Link>
         <MDBNavbarToggler name="navbar-toggler" onClick={toggleCollapse} />
         <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
           <MDBNavbarNav left>
@@ -58,6 +58,12 @@ const Navbar = () => {
                 Book Appointment
               </MDBBtn> 
             </MDBNavItem>
+            <MDBNavItem>
+              <MDBBtn className="button-attention" size="sm" floating="true" href="tel:+0298052803">
+                <MDBIcon icon="phone-alt" className="mr-3"/>
+                Call (02) 9805 2803
+              </MDBBtn> 
+            </MDBNavItem>            
           </MDBNavbarNav>         
           <MDBNavbarNav right>
             <MDBNavItem>

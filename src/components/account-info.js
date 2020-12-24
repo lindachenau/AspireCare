@@ -33,7 +33,7 @@ export default () => {
           </ListItemIcon>
           <ListItemText
             primary="Our online booking allows you to book on behalf of your family members. 
-            Each login is a booking proxy. A patient can be managed by more than one proxy. In other words, both
+            Each login is a booking proxy. A patient can be managed by more than one proxy. For example, both
             parents can be a booking proxy for their children."
           />
         </ListItem>        
@@ -43,7 +43,8 @@ export default () => {
           </ListItemIcon>
           <ListItemText
             primary="To book for a consultation, you first need to create a record for each patient, including yourself. 
-            Click Patients button to create patient records. Please ensure you are authorised to book on their behalves."
+            Click the Patients button to add patients. Please ensure you are authorised to book on their behalves. 
+            New patients are required to show a photo ID on their first appointment."
           />
         </ListItem>
         <ListItem>
@@ -51,10 +52,10 @@ export default () => {
             <EditIcon color="primary"/>
           </ListItemIcon>
           <ListItemText
-            primary="If you book for a new patient to our clinic, we encourage you to fill in their Medicare details online 
-            and submit to our Practice Management System. Our reception will just need to check their ID against the data you provided 
-            and the patient doesn't have to fill in personal details when they visit. This will speed up their first visit.
-            Our website does not keep your data. All information is encrypted before submitting to our Practice Management System."
+            primary="If you book new patients to our clinic, we encourage you to fill in their patient information online 
+            before their appointment and submit to our Practice Management System to speed up the paper work required for their 
+            first appointment. Our website does not keep your data. All information is encrypted before submitting to our Practice 
+            Management System."
           />
         </ListItem>
         <ListItem>
