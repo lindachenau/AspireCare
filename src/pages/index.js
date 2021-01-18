@@ -14,7 +14,7 @@ const imgList = [
     key: "1",
     alt: "First slide",
     title: "General medicine",
-    description: "We build super fast beautiful responsive web applications that rival the performance of native apps.",
+    description: "Our doctors care and listen to your concerns. Achieving better health care one patient at a time.",
     link: "/general-medicine"
   },
   {
@@ -22,16 +22,16 @@ const imgList = [
     key: "2",
     alt: "Second slide",
     title: "Physiotherapy",
-    description: "We integrate your web applications with your business applications for real-time reporting and business insight.",
+    description: "Our physiotherapists provide detailed and comprehensive management of musculoskeletal problems.",
     link: "/physiotherapy"
   },
   {
     name: require("../images/diet.jpg"),
     key: "3",
     alt: "Third slide",
-    title: "Dietetics",
-    description: "We create custom UI solutions to meet client's requirements and solve complex business problems.",
-    link: "/dietetics"
+    title: "Dietitians",
+    description: "Our dietitians provide practical and achievable diet plans and advice to assist people with diverse needs.",
+    link: "/dietitians"
   }
 ]
 

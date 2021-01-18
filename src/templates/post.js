@@ -4,24 +4,16 @@ import Layout from '../components/layout'
 import Content from '../components/content'
 
 export default ({ data }) => {
-   const post = data.markdownRemark
+  const post = data.markdownRemark
+  const titleImg = require(`../images/${post.frontmatter.image}`)
 
-   return (
-      <Layout>
-        <Content title={post.frontmatter.title}>
-          <div style={{ 
-            width: '100%', 
-            height: '200px', 
-            backgroundImage: `Url(https://source.unsplash.com/960x200/?${post.frontmatter.keywords})`, 
-            backgroundSize: 'cover', 
-            backgroundPosition: '50% 0',
-            backgroundRepeat: 'no-repeat', 
-            marginBottom: '30px' }}>
-          </div>
-          <div dangerouslySetInnerHTML={{ __html: post.html }} />
-        </Content>
-      </Layout>
-   )
+  return (
+    <Layout>
+      <Content titleImg={titleImg} title={post.frontmatter.title}>
+        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+      </Content>
+    </Layout>
+  )
 }
 
 export const query = graphql`
@@ -30,7 +22,7 @@ export const query = graphql`
       html
       frontmatter {
         title
-        keywords
+        image
       }
     }
   }

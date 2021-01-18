@@ -11,7 +11,7 @@ const Card = ({image, title, description, link}) => {
                 <MDBCardBody>
                     <MDBCardTitle>{title}</MDBCardTitle>
                     <MDBCardText>{description}</MDBCardText>
-                    <Button color='primary' variant="contained" onClick={() => navigate(link)}>Read</Button>
+                    <Button color='primary' variant="contained" onClick={() => navigate(link)}>More</Button>
                 </MDBCardBody>
             </MDBCard>
         </MDBCol>

@@ -12,8 +12,8 @@ const Features = () => {
       team of female and male doctors are passionately committed to delivering the highest standard of service and 
       offer a range of specialties that allows us to provide comprehensive, life-long care for patients young and old. 
       <br/><br/>
-      Centrally located opposite to Eastwood Landmark Hotel, we are minutes away from Eastwood Train Station and Bus
-      Depot and street parking is available just in front of our medical centre. 
+      Centrally located in Eastwood shopping district opposite to Eastwood Landmark Hotel, we are minutes away from 
+      Eastwood Train Station and street parking is available just in front of our medical centre. 
     </p>
     <MDBRow>
       <MDBCol md="4">

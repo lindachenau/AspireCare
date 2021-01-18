@@ -2,10 +2,11 @@ import React from 'react'
 import Layout from '../components/layout'
 import Content from '../components/content'
 import AppBrowser from '../components/appointment-browser'
+import titleImg from '../images/bg10.jpg'
 
 const Appointments = () => (
   <Layout>
-    <Content title='Appointment browser'>
+    <Content title='Appointment browser' titleImg={titleImg}>
       <AppBrowser/>
     </Content>
   </Layout>

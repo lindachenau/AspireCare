@@ -18,6 +18,11 @@ const Footer = () => {
           </MDBCol>
           <MDBCol md="2" className="b-3">
             <h6 className="title font-weight-bold">
+              <Link to='/open-hours' className="dark-grey-text">Open hours</Link>
+            </h6>
+          </MDBCol>
+          <MDBCol md="2" className="b-3">
+            <h6 className="title font-weight-bold">
               <Link to='/our-team' className="dark-grey-text">Our team</Link>
             </h6>
           </MDBCol>
@@ -44,7 +49,7 @@ const Footer = () => {
         </MDBRow>
         <hr className="clearfix d-md-none rgba-black-light" style={{ margin: "10% 15% 5%" }} />
         <MDBRow className="py-3 d-flex justify-content-center">
-          <MDBCol md="4" >
+          <MDBCol md="3" >
             <div className="text-center">
               <i className="fas fa-map-marker-alt mr-2"></i>
               <a href='https://www.google.com/maps/place/2+Hillview+Rd,+Eastwood+NSW+2122/@-33.7904974,151.0815816,15z/data=!4m5!3m4!1s0x6b12a439e4dfcc77:0x3184686087efe006!8m2!3d-33.790906!4d151.0815375' 
@@ -53,7 +58,19 @@ const Footer = () => {
               </a>
             </div>
           </MDBCol>
-          <MDBCol md="4" >
+          <MDBCol md="3" >
+            <div className="text-center">
+              <i className="fas fa-phone mr-2"></i>
+              <span>(02) 9805 2803</span>
+            </div>
+          </MDBCol>          
+          <MDBCol md="3" >
+            <div className="text-center">
+              <i className="fas fa-fax mr-2"></i>
+              <span>(02) 9805 2803</span>
+            </div>
+          </MDBCol>          
+          <MDBCol md="3" >
             <div className="text-center">
               <i className="fas fa-briefcase mr-2"></i>
               <span>ABN 70 146 472 380</span>

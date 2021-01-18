@@ -44,18 +44,32 @@ const Navbar = () => {
                   <span className="mr-2">Services</span>
                 </MDBDropdownToggle>
                 <MDBDropdownMenu className={`dropdown-default ${styles.dropdownMenu}`}>
-                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/general-medicine")}>General medicine</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/general-medicine")}>General Medicine</MDBDropdownItem>
                   <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/physiotherapy")}>Physiotherapy</MDBDropdownItem>
-                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/dietetics")}>Dietetics</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/dietitians")}>Dietitians</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/pathology")}>Pathology</MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
             </MDBNavItem>
+            <MDBNavItem>
+              <MDBDropdown>
+                <MDBDropdownToggle nav caret>
+                  <span className="mr-2">Our Practice</span>
+                </MDBDropdownToggle>
+                <MDBDropdownMenu className={`dropdown-default ${styles.dropdownMenu}`}>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/general-information")}>General Information</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/open-hours")}>Open Hours</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/location-contact")}>Location & Contact</MDBDropdownItem>
+                  <MDBDropdownItem className={`black-text nav-link ${styles.dropdownItem}`} onClick={() => navigate("/privacy-policy")}>Privacy Policy</MDBDropdownItem>
+                </MDBDropdownMenu>
+              </MDBDropdown>
+            </MDBNavItem>            
           </MDBNavbarNav>
           <MDBNavbarNav left>
             <MDBNavItem>
-              <MDBBtn className="button-attention" size="sm" floating="true" onClick={() => navigate("/appointments")}>
+              <MDBBtn className="button-attention" size="sm" floating="true" onClick={() => navigate("/appointment-browser")}>
                 <MDBIcon icon="calendar-check" className="mr-3" />
-                Book Appointment
+                Book Online
               </MDBBtn> 
             </MDBNavItem>
             <MDBNavItem>
