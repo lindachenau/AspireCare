@@ -1,7 +1,7 @@
 {
-  "name": "Aspire Medical Centre Eastwood Booking Website",
+  "name": "Aspire-Medical-Centre-Eastwood-Booking-Website",
   "private": true,
-  "description": "A medical centre booking website built on Gastby and Material Design For Bootstrap",
+  "description": "A medical centre booking website built on Gatsby and Material Design For Bootstrap",
   "version": "0.1.0",
   "author": "Linda Chen",
   "dependencies": {

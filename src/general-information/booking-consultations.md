@@ -2,7 +2,7 @@
 sequence: "1"
 title: "Booking Consultations"
 group: "Appointment Information"
-overview: "Our Practice is an appointment based practice and bookings can be made online or by calling (02) 9988 1022. we offer tele-consultations to patients who have visited our practice in the past 12 months."
+overview: "Our Practice is an appointment based practice and bookings can be made online or by calling (02) 9988 1022. We offer tele-consultations to patients who have visited our practice in the past 12 months."
 ---
 
 Walk-ins are accommodated if circumstances allow however patients may experience long waiting time and may not be able to see a doctor of your choice.

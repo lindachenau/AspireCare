@@ -2,12 +2,16 @@ import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import InfoCard from './info-card'
 import { MDBRow } from 'mdbreact'
+import img1 from "../images/booking-consultations.jpg"
+import img2 from "../images/communication-assistance.jpg"
+import img3 from "../images/consultation-fees.jpg"
+import img4 from "../images/cancellation.jpg"
 
 const avatars = {
-  "Booking Consultations": require("../images/booking-consultations.jpg"),
-  "Communication Assistance": require("../images/communication-assistance.jpg"),
-  "Consultation Fees and Billing": require("../images/consultation-fees.jpg"),
-  "Cancellation": require("../images/cancellation.jpg"),
+  "Booking Consultations": img1,
+  "Communication Assistance": img2,
+  "Consultation Fees and Billing": img3,
+  "Cancellation": img4
 }
 
 const InfoList = () => {

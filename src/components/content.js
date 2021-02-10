@@ -20,7 +20,7 @@ const Content = ({ titleImg, title, titleColor="white", tagline='', children }) 
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-      </div>        
+      </div>     
       <MDBContainer maxWidth="md" style={{paddingTop: "5vh", paddingBottom: "10vh"}}>
         <MDBRow >
           <MDBCol md="12" className="dark-grey-text text-left">

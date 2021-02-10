@@ -2,17 +2,26 @@ import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import MemberCard from './member-card'
 import { MDBRow } from 'mdbreact'
+import kai from "../images/kai.jpg"
+import linda from "../images/linda.jpg"
+import dennis from "../images/dennis.jpg"
+import mich from "../images/mich.jpg"
+import angela from "../images/angela.jpg"
+import melody from "../images/melody.jpg"
+import yvonne from "../images/yvonne.jpg"
+import james from "../images/james.jpg"
+import carol from "../images/carol.jpg"
 
 const avatars = {
-  "kai": require("../images/kai.jpg"),
-  "linda": require("../images/linda.jpg"),
-  "dennis": require("../images/dennis.jpg"),
-  "mich": require("../images/mich.jpg"),
-  "angela": require("../images/angela.jpg"),
-  "melody": require("../images/melody.jpg"),
-  "yvonne": require("../images/yvonne.jpg"),
-  "james": require("../images/james.jpg"),
-  "carol": require("../images/carol.jpg")
+  "kai": kai,
+  "linda": linda,
+  "dennis": dennis,
+  "mich": mich,
+  "angela": angela,
+  "melody": melody,
+  "yvonne": yvonne,
+  "james": james,
+  "carol": carol
 }
 
 const TeamList = () => {

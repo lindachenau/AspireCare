@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { MDBContainer, MDBRow, MDBCol } from "mdbreact"
 import Layout from '../components/layout'
-import Content from '../components/content'
 import AccountNav from '../components/account-nav'
 import AccountInfo from '../components/account-info'
 import Patients from '../components/patients'
@@ -45,13 +45,17 @@ export default () => {
 
    return (
     <Layout>
-      <Content title='My account'>
-        <AccountNav value={value} setValue={setValue} />
-        {value === 0 && <AccountInfo />}
-        {value === 1 && <Appointments />}
-        {value === 2 && <Patients patStage={patStage} setPatStage={setPatStage}/>}
-        {value === 3 && <UpdateUser />}
-      </Content>    
+      <MDBContainer maxWidth="md" style={{paddingTop: "5vh", paddingBottom: "10vh"}}>
+        <MDBRow >
+          <MDBCol md="12" className="dark-grey-text text-left">
+            <AccountNav value={value} setValue={setValue} />
+            {value === 0 && <AccountInfo />}
+            {value === 1 && <Appointments />}
+            {value === 2 && <Patients patStage={patStage} setPatStage={setPatStage}/>}
+            {value === 3 && <UpdateUser />}
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>      
     </Layout>
   )
 }

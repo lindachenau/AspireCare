@@ -1,5 +1,13 @@
 const { createFilePath } = require('gatsby-source-filesystem')
 const path = require('path')
+const pagesToGenerate = [
+   '/dietitians/',
+   '/general-medicine/',
+   '/pathology/',
+   '/physiotherapy/',
+   '/open-hours/',
+   '/privacy-policy/'
+]
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
    console.log(`*** I am processing a node with type: ${node.internal.type}`)
@@ -32,13 +40,16 @@ exports.createPages = async ({ graphql, actions }) => {
       }
    `).then(result => {
       result.data.allMarkdownRemark.edges.forEach(({ node }) => {
-         createPage({
-            path: node.fields.slug,
-            component: path.resolve('./src/templates/post.js'),
-            context: {
-               slug: node.fields.slug,
-            },
-         })
+         const slug = node.fields.slug
+         if (pagesToGenerate.includes(slug)) {
+            createPage({
+               path: node.fields.slug,
+               component: path.resolve('./src/templates/post.js'),
+               context: {
+                  slug: node.fields.slug
+               },
+            })
+         }
       })
    })
 }

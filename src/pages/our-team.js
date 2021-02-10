@@ -4,12 +4,10 @@ import Content from '../components/content'
 import titleImg from '../images/bg8.jpg'
 import TeamList from '../components/team-list'
 
-const OurTeam = () => (
+export default () => (
   <Layout>
     <Content title='Our team' titleImg={titleImg} tagline='Passion led us here'>
       <TeamList/>
     </Content>
   </Layout>
 )
-
-export default OurTeam

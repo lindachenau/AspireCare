@@ -7,10 +7,13 @@ import Features from '../components/features'
 import Card from '../components/card'
 import { MDBRow } from 'mdbreact'
 import Bulletin from '../components/bulletin'
+import generalMed from "../images/takingblood.jpg"
+import physio from "../images/physio.jpg"
+import diet from "../images/diet.jpg"
 
 const imgList = [
   {
-    name: require("../images/takingblood.jpg"),
+    name: generalMed,
     key: "1",
     alt: "First slide",
     title: "General medicine",
@@ -18,7 +21,7 @@ const imgList = [
     link: "/general-medicine"
   },
   {
-    name: require("../images/physio.jpg"),
+    name: physio,
     key: "2",
     alt: "Second slide",
     title: "Physiotherapy",
@@ -26,7 +29,7 @@ const imgList = [
     link: "/physiotherapy"
   },
   {
-    name: require("../images/diet.jpg"),
+    name: diet,
     key: "3",
     alt: "Third slide",
     title: "Dietitians",

@@ -4,12 +4,10 @@ import Content from '../components/content'
 import AppBrowser from '../components/appointment-browser'
 import titleImg from '../images/bg10.jpg'
 
-const Appointments = () => (
+export default () => (
   <Layout>
     <Content title='Appointment browser' titleImg={titleImg}>
       <AppBrowser/>
     </Content>
   </Layout>
 )
-
-export default Appointments

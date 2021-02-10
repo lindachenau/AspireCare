@@ -8,8 +8,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { Storage } from 'aws-amplify'
 import showdown from 'showdown'
 import axios from 'axios'
-
-const logo = require('../images/logo.png')
+import logo from '../images/logo.png'
 
 const useStyles = makeStyles(theme => ({
   container: {

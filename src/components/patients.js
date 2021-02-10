@@ -65,7 +65,7 @@ const Patient = ({
     if (userInfo.appId)
       navigate("/book")
     else 
-      navigate("/appointments")
+      navigate("/appointment-browser")
   }
 
   const editExistingPatient = () => {

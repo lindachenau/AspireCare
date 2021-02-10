@@ -1,22 +1,27 @@
+import kaiProfile from "../images/kai.jpg"
+import dennisProfile from "../images/dennis.jpg"
+import lindaProfile from "../images/linda.jpg"
+import michProfile from "../images/mich.jpg"
+
 export const doctors = {
   "0001": {
     title: "Dr Kai Yu",
-    avatar: require("../images/kai.jpg"),
+    avatar: kaiProfile,
     job: "General Practitioner"
   },
   "0002": {
     title: "Dr Dennis Yu",
-    avatar: require("../images/dennis.jpg"),
+    avatar: dennisProfile,
     job: "General Practitioner"
   },
   "0003": {
     title: "Dr Linda Chen",
-    avatar: require("../images/linda.jpg"),
+    avatar: lindaProfile,
     job: "General Practitioner"
   },
   "0004": {
     title: "Dr Michellenne Yu",
-    avatar: require("../images/mich.jpg"),
+    avatar: michProfile,
     job: "General Practitioner"
   }
 }
