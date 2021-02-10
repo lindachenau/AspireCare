@@ -12,7 +12,7 @@
     "amazon-cognito-identity-js": "^4.3.4",
     "aws-amplify": "^3.0.13",
     "aws-amplify-react": "^4.1.12",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "gatsby": "^2.0.76",
     "gatsby-cli": "^2.15.0",
     "gatsby-image": "^2.0.20",
