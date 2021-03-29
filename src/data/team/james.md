@@ -1,7 +1,8 @@
 ---
 sequence: "5"
 title: "James Philips"
-role: "physiotherapist"
+role: "team"
+avatar: "physiotherapist"
 job: "Physiotherapist"
 image: "james.jpg"
 school: "University of Sydney"

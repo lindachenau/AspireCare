@@ -61,7 +61,7 @@ const Appointment = ({id, appointmentDate, setAppId, triggerMessage, setTriggerM
   )
 }
 
-const Appointments = ({}) => {
+const Appointments = () => {
   const userInfo = getAppUser()
   const [patients, setPatients] = useState([])
   const [curPatient, setCurPatient] = useState(userInfo.patientIndex ? userInfo.patientIndex : 0)

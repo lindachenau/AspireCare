@@ -1,7 +1,8 @@
 ---
 sequence: "9"
 title: "Yvonne Fletcher"
-role: "receptionist"
+role: "team"
+avatar: "receptionist"
 job: "Receptionist"
 image: "yvonne.jpg"
 school: "University of Newcastle"

@@ -1,7 +1,8 @@
 ---
 sequence: "3"
 title: "Dr Linda Chen"
-role: "doctor"
+role: "appointment, team"
+avatar: "doctor"
 bpid: "57"
 job: "General Practitioner"
 image: "linda.jpg"

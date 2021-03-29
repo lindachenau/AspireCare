@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { MDBCol } from 'mdbreact'
 import Button from '@material-ui/core/Button'
-import { bookingMessage } from '../utils/booking-helper'
+import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
 
 const useStyles = makeStyles(theme => ({
   alignVertical: {
@@ -18,19 +18,26 @@ const useStyles = makeStyles(theme => ({
 
 export default function DaySlots({drId, date, slots, setAppId}) {
   const classes = useStyles()
+  const { allMarkdownRemark } = useAppointmentProfiles()
 
   const handleSlot = (e) => {
-    const message = bookingMessage(e.currentTarget.value)
+    const message = `${doctorTitles[drId]} at ${e.currentTarget.value}`
     setAppId(message)
   }
-     
+
+  // Change the format to object for easy access  
+  const doctorTitles = {}
+  allMarkdownRemark.edges.forEach(node => {
+    doctorTitles[node.node.frontmatter.bpid] = node.node.frontmatter.title
+  })
+
   return (
     <MDBCol className={classes.alignVertical}>
       {slots.map(slot => {
         return (
           <Button
             key={slot}
-            value={`${drId} ${date} ${slot}`}
+            value={`${date} ${slot}`}
             size="small"
             onClick={handleSlot}
           >

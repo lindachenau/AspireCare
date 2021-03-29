@@ -6,7 +6,7 @@ import EventIcon from '@material-ui/icons/Event'
 import PeopleIcon from '@material-ui/icons/People'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
-export default ({value, setValue}) => {
+export default function AccountNav ({value, setValue}) {
 
   return (
     <BottomNavigation

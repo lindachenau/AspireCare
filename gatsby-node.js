@@ -9,7 +9,7 @@ const pagesToGenerate = [
    '/privacy-policy/'
 ]
 
-exports.onCreateNode = ({ node, getNode, actions }) => {
+exports.onCreateNode = async ({ node, getNode, actions }) => {
    console.log(`*** I am processing a node with type: ${node.internal.type}`)
    if (node.internal.type === 'MarkdownRemark') {
       const { createNodeField } = actions

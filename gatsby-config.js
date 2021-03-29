@@ -15,32 +15,40 @@ module.exports = {
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-          name: 'files',
-          path: `${__dirname}/src/services`,
+          name: 'services',
+          path: `${__dirname}/src/data/services`,
       },
     },
 
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-          name: 'files',
-          path: `${__dirname}/src/team`,
+          name: 'team',
+          path: `${__dirname}/src/data/team`,
       },
     },
 
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-          name: 'files',
-          path: `${__dirname}/src/our-practice`,
+          name: 'our-practice',
+          path: `${__dirname}/src/data/our-practice`,
       },
     },
 
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-          name: 'files',
-          path: `${__dirname}/src/general-information`,
+          name: 'general-information',
+          path: `${__dirname}/src/data/general-information`,
+      },
+    },
+
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+          name: 'images',
+          path: `${__dirname}/src/images`,
       },
     },
 
@@ -69,6 +77,6 @@ module.exports = {
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.app/offline
-    // 'gatsby-plugin-offline',
+    'gatsby-plugin-offline',
   ],
 }

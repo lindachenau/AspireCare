@@ -1,7 +1,8 @@
 ---
 sequence: "2"
 title: "Dr Dennis Yu"
-role: "doctor"
+role: "appointment, team"
+avatar: "doctor"
 bpid: "1"
 job: "General Practitioner"
 image: "dennis.jpg"

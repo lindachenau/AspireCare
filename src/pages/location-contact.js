@@ -4,8 +4,8 @@ import Button from '@material-ui/core/Button'
 import { navigate } from 'gatsby'
 import Layout from '../components/layout'
 import Content from '../components/content'
-import titleImg from '../images/bg9.jpg'
-import shopFront from '../images/shop.jpg'
+import titleImg from '../data/our-practice/bg9.jpg'
+import shopFront from '../data/our-practice/shop.jpg'
 
 const LocationContact = (theme) => {
   const useStyles = makeStyles(theme => ({
@@ -29,7 +29,7 @@ const LocationContact = (theme) => {
           alt="" target='_blank' rel="noreferrer" className="dark-grey-text">
           2 Hillview Rd, Eastwood 2122, NSW
         </a>
-        <img className={classes.shopImg} src={shopFront}></img>
+        <img className={classes.shopImg} alt="Aspire Medical Centre" src={shopFront}></img>
         <p>Our contact is shown below. Please call us if you have any enquiries or to make an appointment.</p>
         <span><b>Phone number</b> (02) 98052803</span>
         <br/>

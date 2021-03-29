@@ -3,13 +3,18 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import Content from '../components/content'
 
-export default ({ data }) => {
+export default function Post ({ data }) {
   const post = data.markdownRemark
-  const titleImg = require(`../images/${post.frontmatter.image}`)
+  const bgImgs = {}
+  data.allFile.nodes.forEach(({id, childImageSharp}) => {
+    bgImgs[id] = {
+      fluid: childImageSharp.fluid
+    }
+  })
 
   return (
     <Layout>
-      <Content titleImg={titleImg} title={post.frontmatter.title}>
+      <Content titleImg={bgImgs[post.frontmatter.image.id].fluid.src} title={post.frontmatter.title}>
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
       </Content>
     </Layout>
@@ -22,8 +27,21 @@ export const query = graphql`
       html
       frontmatter {
         title
-        image
+        image {
+          id
+        }
       }
     }
-  }
-`
+    allFile(
+      filter: {extension: {regex: "/(jpeg|jpg|png)/"}}
+    ) {
+      nodes {
+        id
+        childImageSharp {
+          fluid (maxWidth: 1200) {
+            ...GatsbyImageSharpFluid
+          }
+        }
+      }
+    }
+  }`

@@ -1,7 +1,8 @@
 ---
 sequence: "7"
 title: "Angela Smith"
-role: "nurse"
+role: "team"
+avatar: "nurse"
 job: "Nurse"
 image: "angela.jpg"
 school: "University of Newcastle"

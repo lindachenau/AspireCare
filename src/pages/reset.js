@@ -3,8 +3,10 @@ import Layout from '../components/layout'
 
 import Reset from '../components/reset'
 
-export default () => (
+const ResetPage = () => (
   <Layout>
     <Reset/>
   </Layout>
 )
+
+export default ResetPage

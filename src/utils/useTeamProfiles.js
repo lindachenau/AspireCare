@@ -4,13 +4,22 @@ export const useTeamProfiles = () => {
   const { allMarkdownRemark, allFile } = useStaticQuery(
     graphql`
       query {
-        allMarkdownRemark(sort: {fields: [frontmatter___sequence], order: ASC}, filter: {fileAbsolutePath: {regex: "/(team)/"}}) {
+        allMarkdownRemark(
+          sort: {
+            fields: [frontmatter___sequence], 
+            order: ASC
+          }, 
+          filter: {
+            frontmatter: {role: {regex: "/(team)/"}}, 
+            fileAbsolutePath: {regex: "/(team)/"}
+          }) {
           edges {
             node {
               id
               frontmatter {
                 title
                 role
+                avatar
                 job
                 image {
                   id

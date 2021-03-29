@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default () => {
+const PageBook = () => {
   const consultationType = {
     standard: "Standard consultation",
     video: "Video consultation",
@@ -147,3 +147,5 @@ export default () => {
     </Layout>
   )
 }
+
+export default PageBook

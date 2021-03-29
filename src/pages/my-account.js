@@ -10,7 +10,7 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { getUser }  from '../graphql/queries'
 import UpdateUser from '../components/update-user'
 
-export default () => {
+const MyAccount = () => {
   const [value, setValue] = useState(-1)
   //0 : Display patients; 1: add or edit patient
   const [patStage, setPatStage] = useState(0)
@@ -59,3 +59,5 @@ export default () => {
     </Layout>
   )
 }
+
+export default MyAccount

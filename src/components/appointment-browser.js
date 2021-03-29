@@ -6,12 +6,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/Button'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import moment from 'moment'
 import axios from "axios"
-import { doctors } from '../utils/booking-helper'
 import Message from './message'
 import { isLoggedIn, setUser, getUser } from './app-user'
+import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
 
 const useStyles = makeStyles(theme => ({
   leftMiddle: {
@@ -35,9 +34,10 @@ const useStyles = makeStyles(theme => ({
   }  }))
 
 const AppBrowser = () => {
-  // const bp_server = process.env.GATSBY_BP_SERVER
-  const bp_server = process.env.GATSBY_AWS_BP_SIMULATOR
+  // const bp_server = process.env.GATSBY_AWS_BP_SIMULATOR
+  const bp_server = process.env.GATSBY_BP_SERVER
   const classes = useStyles()
+  const { allMarkdownRemark, allFile } = useAppointmentProfiles()
   const [appData, setAppData] = useState([])
   const [startDate, setStartDate] = useState(new Date())
   const [numDays, setNumDays] = useState(0)
@@ -46,18 +46,37 @@ const AppBrowser = () => {
   const [appId, setAppId ] = useState("")
   const [triggerMessage, setTriggerMessage] = useState(false)
   const message = `You need to login to book ${appId}. Press the Proceed button to Login or Create new account.`
-  
+  const doctorProfiles = {}
+
+  // Format the data for easy access
+  const doctorProfilePhotos = {}
+  const doctorList = []
+  allFile.nodes.forEach(({id, childImageSharp}) => {
+    doctorProfilePhotos[id] = {
+      fluid: childImageSharp.fluid
+    }
+  })  
+  allMarkdownRemark.edges.forEach(({node}) => {
+    doctorProfiles[node.frontmatter.bpid] = {
+      title: node.frontmatter.title,
+      job: node.frontmatter.job,
+      avatar: doctorProfilePhotos[node.frontmatter.image.id].fluid.src
+    }
+    doctorList.push(node.frontmatter.bpid)
+  })
+
   useEffect(() => {
     
     const fetchApps = async () => {
-      if (numDays > 0) {
+      if (numDays > 0 && doctorList.length > 0) {
         const config = {
           method: 'post',
           headers: {"Content-Type": "application/json"},
           url: bp_server,
           data: {
             startDate: moment(startDate).format("YYYY-MM-DD"),
-            numDays: numDays
+            numDays: numDays,
+            userList: doctorList
           }
         }
         setLoading(true)
@@ -69,8 +88,8 @@ const AppBrowser = () => {
     }
 
     fetchApps()
-
-  }, [startDate, numDays, bp_server])
+  // Do not include doctorList in the dependency list. It caused firing fetchApps indefinitely even when it is derived from another useEffect with [] dependency.
+  }, [startDate, numDays])
 
   useEffect(() => {
     //narrow screen display 4 columns only. Need to check whether it works for iPad or not
@@ -138,9 +157,9 @@ const AppBrowser = () => {
             key={doctor.bpId}
             isLoading={loading}
             drId={doctor.bpId}
-            title={doctors[doctor.bpId].title}
-            avatar={doctors[doctor.bpId].avatar}
-            job={doctors[doctor.bpId].job}
+            title={doctorProfiles[doctor.bpId].title}
+            avatar={doctorProfiles[doctor.bpId].avatar}
+            job={doctorProfiles[doctor.bpId].job}
             appointments={doctor.appointments}
             setAppId={id => openMessage(id)}
           />

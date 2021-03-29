@@ -1,7 +1,8 @@
 ---
 sequence: "4"
 title: "Dr Michellenne Yu"
-role: "doctor"
+role: "appointment, team"
+avatar: "doctor"
 bpid: "47"
 job: "General Practitioner"
 image: "mich.jpg"

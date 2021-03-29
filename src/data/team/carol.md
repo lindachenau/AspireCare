@@ -1,7 +1,8 @@
 ---
 sequence: "6"
 title: "Carol Winston"
-role: "dietitian"
+role: "team"
+avatar: "dietitian"
 job: "Dietitian"
 image: "carol.jpg"
 school: "UNSW"

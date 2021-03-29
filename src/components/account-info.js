@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default () => {
+const AccountInfo = () => {
   const classes = useStyles()
 
   return (
@@ -72,4 +72,4 @@ export default () => {
   )
 }
 
-
+export default AccountInfo

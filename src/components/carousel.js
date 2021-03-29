@@ -1,14 +1,16 @@
 import React from "react"
 import { MDBCarousel, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask } from "mdbreact"
+// import Img from 'gatsby-image'
 
 const CarouselPage = ({imgList}) => {
   return (
-    <MDBCarousel activeItem={1} length={3} className="z-depth-1 w-100">
+    <MDBCarousel activeItem={1} length={4} className="z-depth-1 w-100">
       <MDBCarouselInner>
-        {imgList.map( image => 
-          <MDBCarouselItem itemId={image.key} key={image.key}>
+        {imgList.map(item => 
+          <MDBCarouselItem itemId={item.key} key={item.key}>
             <MDBView>
-              <img className="d-block w-100" src={image.name} alt={image.alt} />
+              {/* <Img className="d-block w-100" fluid={item.image.fluid} alt={item.title} /> */}
+              <img className="d-block w-100" src={item.image.fluid.src} alt={item.title} />
               <MDBMask overlay="white-light" />
             </MDBView>
           </MDBCarouselItem>
