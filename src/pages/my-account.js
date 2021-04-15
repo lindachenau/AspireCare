@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react'
+import { navigate } from 'gatsby'
 import { MDBContainer, MDBRow, MDBCol } from "mdbreact"
 import Layout from '../components/layout'
 import AccountNav from '../components/account-nav'
 import AccountInfo from '../components/account-info'
 import Patients from '../components/patients'
 import Appointments from '../components/appointments'
-import { setUser, getUser as getAppUser } from '../components/app-user'
+import { setUser, getUser as getAppUser, isLoggedIn } from '../components/auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser }  from '../graphql/queries'
-import UpdateUser from '../components/update-user'
+import UpdateUser from '../components/auth/update-user'
+//Need Amplify configuration here in case user refresh my-account page. Without it, login session will not persist
+import Amplify from 'aws-amplify'
+import config from '../aws-exports'
+Amplify.configure(config)
 
 const MyAccount = () => {
-  const [value, setValue] = useState(-1)
+  const [value, setValue] = useState(0)
   //0 : Display patients; 1: add or edit patient
   const [patStage, setPatStage] = useState(0)
 
@@ -35,11 +40,14 @@ const MyAccount = () => {
         }
 
       } catch (err) {
-        console.log(console.log('Amplify getUser error...: ', err))
+        console.log('Amplify getUser error...: ', err)
       }
     }
 
-    getPatientsByUser()
+    if (!isLoggedIn()) 
+      navigate("/signin")
+    else 
+      getPatientsByUser()
 
   }, [])
 

@@ -19,7 +19,10 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { createPatient, createUserMember } from '../graphql/mutations'
 import { getUser, getPatient } from '../graphql/queries'
 import moment from 'moment'
-import { getUser as getAppUser} from './app-user'
+import { getUser as getAppUser} from './auth/app-user'
+import { getPatientURL, addPatientURL } from '../utils/booking-api'
+import axios from "axios"
+import { patientTitles, patientSexCodes } from "../utils/bp-codes"
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -36,11 +39,11 @@ const useStyles = makeStyles(theme => ({
 export default function ProfileForm({theme, triggerOpen, initOpen}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
-  const [title, setTitle] = useState("")
+  const [title, setTitle] = useState(0)
   const [firstName, setFirstName] = useState(null)
   const [lastName, setLastName] = useState(null)
   const [dOB, setDOB] = useState(null)
-  const [gender, setGender] = useState("")
+  const [gender, setGender] = useState(0)
   
   const classes = useStyles(theme)
 
@@ -54,13 +57,70 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
     }
   }, [triggerOpen, initOpen])
 
+  const getPatientFromBP = async (surname, firstname, dob) => {
+    try {
+      const config = {
+        method: 'post',
+        headers: {"Content-Type": "application/json"},
+        url: getPatientURL,
+        data: {
+          surname: surname,
+          dob: dob
+        }
+      }
+      const result = await axios(config)
+      const patList = result.data
+
+      let id = null
+      let normalisedName = firstname.toUpperCase().replace(/-| /g,'')
+      if (patList.length > 0) {
+        patList.forEach(element => {
+          if (normalisedName === element.firstname.toUpperCase().replace(/-| /g,''))
+            id = element.id
+        })
+      }
+
+      return id
+    } catch(err) {
+      console.log('BP_GetPatientByPartSurnameDOB error', err)
+    }
+  }
+
+  const addPatientToBP = async (titleCode, firstname, surname, dob, sexCode) => {
+    try {
+      const config = {
+        method: 'post',
+        headers: {"Content-Type": "application/json"},
+        url: addPatientURL,
+        data: {
+          titleCode,
+          firstname,
+          surname,
+          dob,
+          sexCode
+        }
+      }
+      const result = await axios(config)
+
+      return result.data
+    } catch(err) {
+      console.log('BP_AddPatient error', err)
+    }
+  }
+
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
     const patientId = `${firstName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${lastName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${dob} ${gender}`
     const username = getAppUser().username
     const existingPatient = await API.graphql(graphqlOperation(getPatient, {id: patientId}))
+    const dobBP = moment(dob).format("YYYY-MM-DD")
 
     if (!existingPatient.data.getPatient) {
+      let bpId = await getPatientFromBP(lastName, firstName, dobBP)
+
+      if (bpId === null)
+        bpId = await addPatientToBP(title, firstName, lastName, dobBP, gender)
+
       API.graphql(graphqlOperation(createPatient, {
           input: {
             id: patientId,
@@ -69,6 +129,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             lastname: lastName,
             dob: dob,
             gender: gender,
+            bpPatientId: bpId,
             createdBy: username
           }
       }))
@@ -111,14 +172,15 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
 
   return (
     <>
-      <Dialog maxWidth='xs' open={open} onBackdropClick={() => setOpen(false)}>
+      {/* <Dialog maxWidth='xs' open={open} onBackdropClick={() => setOpen(false)}> */}
+      <Dialog maxWidth='xs' open={open}>
         <IconButton edge="start" color="inherit" className={classes.close} onClick={() => setOpen(false)} aria-label="close">
           <CloseIcon />
         </IconButton>        
         <DialogContent>
           <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Profile</h3>
           <p className="pt-2 pb-1 text-center p-responsive" >This profile identifies a patient in our system. Once created, it cannot be changed.</p>
-          <FormControl required fullWidth>
+          <FormControl fullWidth>
             <InputLabel htmlFor="title-native-simple">Title</InputLabel>
             <Select
               native
@@ -129,12 +191,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
                 id: 'title-native-simple',
               }}
             >
-              <option aria-label="None" value="" />
-              <option value={"Mr."}>Mr.</option>
-              <option value={"Mrs."}>Mrs.</option>
-              <option value={"Ms."}>Ms.</option>
-              <option value={"Miss"}>Miss</option>
-              <option value={"Mast."}>Mast.</option>
+              {patientTitles.map((item, index) => <option value={index}>{item.label}</option>)}              
             </Select>
           </FormControl>          
           <TextField
@@ -170,11 +227,10 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
               }}
             />
           </MuiPickersUtilsProvider>
-          <FormControl required fullWidth >
+          <FormControl fullWidth >
             <InputLabel htmlFor="gender-native-simple">Gender</InputLabel>
             <Select
               native
-              required
               value={gender}
               onChange={event => setGender(event.target.value)}
               inputProps={{
@@ -182,10 +238,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
                 id: 'gender-native-simple',
               }}
             >
-              <option aria-label="None" value="" />
-              <option value={"Female"}>Female</option>
-              <option value={"Male"}>Male</option>
-              <option value={"Other"}>Other</option>
+              {patientSexCodes.map((item, index) => <option value={index}>{item.label}</option>)}              
             </Select>
           </FormControl>                    
         </DialogContent>
@@ -195,7 +248,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             onClick={handleSave} 
             color="primary" 
             fullWidth
-            disabled={!(title !== "" && firstName && lastName && dOB && gender !== "")}
+            disabled={!(firstName && lastName && dOB)}
           >
             Submit
           </Button>

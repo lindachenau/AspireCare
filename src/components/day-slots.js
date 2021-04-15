@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { MDBCol } from 'mdbreact'
 import Button from '@material-ui/core/Button'
 import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
+import { setUser, getUser } from './auth/app-user'
 
 const useStyles = makeStyles(theme => ({
   alignVertical: {
@@ -21,7 +22,16 @@ export default function DaySlots({drId, date, slots, setAppId}) {
   const { allMarkdownRemark } = useAppointmentProfiles()
 
   const handleSlot = (e) => {
-    const message = `${doctorTitles[drId]} at ${e.currentTarget.value}`
+    const appTime = e.currentTarget.value
+    //Save the chosen slot
+    const userInfo = {
+      ...getUser(),
+      appTime: appTime,
+      drId: drId
+    }
+    setUser(userInfo)
+
+    const message = `${doctorTitles[drId]} on ${appTime.slice(0, 10)} at ${appTime.slice(11)}`
     setAppId(message)
   }
 

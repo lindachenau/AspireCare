@@ -14,7 +14,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import Button from '@material-ui/core/Button'
 import PatientForms from './patient-forms'
 import Message from './message'
-import { getUser as getAppUser, setUser } from './app-user'
+import { getUser as getAppUser, setUser } from './auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient }  from '../graphql/queries'
 import { deleteUserMember } from '../graphql/mutations'
@@ -43,6 +43,7 @@ const Patient = ({
   name, 
   dob, 
   id,
+  bpPatientId,
   patientIndex, 
   setPatient, 
   setPatStage,
@@ -57,6 +58,7 @@ const Patient = ({
       ...getAppUser(),
       patientName: name,
       patientId: id,
+      bpPatientId: bpPatientId,
       patientIndex: patientIndex
     }
     setUser(userInfo)
@@ -217,10 +219,11 @@ const Patients = ({patStage, setPatStage}) => {
           <Legend />
           {patients.map((pat, index) => (
             <Patient 
-              key={pat.dob} 
+              key={pat.id} 
               name={`${pat.firstname} ${pat.lastname}`} 
               dob={pat.dob} 
               id={pat.id}
+              bpPatientId={pat.bpPatientId}
               patientIndex={index}
               setPatient={setPatient}
               setPatStage={setPatStage}

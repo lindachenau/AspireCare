@@ -12,9 +12,13 @@ import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import Button from '@material-ui/core/Button'
 import Message from '../components/message'
-import { getUser, setUser } from '../components/app-user'
+import { getUser, setUser } from '../components/auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { createAppointment }  from '../graphql/mutations'
+import { addAppointmentURL } from '../utils/booking-api'
+import titleImg from '../images/bg7.jpg'
+import { consultationTypes } from "../utils/bp-codes"
+import axios from "axios"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,49 +43,74 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PageBook = () => {
-  const consultationType = {
-    standard: "Standard consultation",
-    video: "Video consultation",
-    immunisation: "Immunisation",
-    pap: "Pap smear"
-  }
-
-  const [value, setValue] = useState('standard')
+  const [conTypeIndex, setConTypeIndex] = useState(0)
   const [patient, setPatient] = useState(null)
   const [patientId, setPatientId] = useState(null)
+  const [bpPatientId, setBpPatientId] = useState(null)
+  const [drId, setDrId] = useState(null)
   const [appId, setAppId] = useState(null)
+  const [appTime, setAppTime] = useState(null)
   const [email, setEmail] = useState(null)
   const [triggerMessage, setTriggerMessage] = useState(false)
-  const message = `You have booked ${patient} with ${appId} for ${consultationType[value]}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`  
+  const message = `You have booked ${patient} with ${appId} for a ${consultationTypes[conTypeIndex].label}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`  
   const classes = useStyles()
 
   useEffect(() => {
     const userInfo = getUser()
     setPatient(userInfo.patientName)
     setPatientId(userInfo.patientId)
+    setBpPatientId(userInfo.bpPatientId)
+    setDrId(userInfo.drId)
     setAppId(userInfo.appId)
+    setAppTime(userInfo.appTime)
     setEmail(userInfo.email)
   }, [])
 
   const handleChange = (event) => {
-    setValue(event.target.value)
+    setConTypeIndex(event.target.value)
   }  
+
+  const addAppointmentToBP = async (aptDate, aptTime, aptType, practitionerID, patientID) => {
+    try {
+      const config = {
+        method: 'post',
+        headers: {"Content-Type": "application/json"},
+        url: addAppointmentURL,
+        data: {
+          aptDate, 
+          aptTime, 
+          aptType, 
+          practitionerID, 
+          patientID
+        }
+      }
+      const result = await axios(config)
+
+      return result.data
+    } catch(err) {
+      console.log('BP_AddAppointment error', err)
+    }
+  }
 
   const addAppointment = async (username) => {
     try {
-      await API.graphql(graphqlOperation(createAppointment, {
+      const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(10), consultationTypes[conTypeIndex].code, drId, bpPatientId)
+      console.log("BP appointment ID", bpAptId)
+      
+      API.graphql(graphqlOperation(createAppointment, {
         input: {
           id: appId,
-          time: appId.slice(-19),
+          time: appTime,
           patientID: patientId,
           status: {
             category: 'booked'
           },
-          bookedBy: username
+          bookedBy: username,
+          bpAppointmentId: bpAptId
         }
       }))
     } catch (err) {
-      console.log(console.log('Amplify createAppointment error...: ', err))
+      console.log('Amplify createAppointment error...: ', err)
     }
   }
 
@@ -96,7 +125,7 @@ const PageBook = () => {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         email: email,
-        body: `You have booked ${patient} with ${appId} for a ${consultationType[value]}.`,
+        body: `You have booked ${patient} with ${appId} for a ${consultationTypes[conTypeIndex].label}.`,
         subject: 'Your booking is confirmed!',
         source: 'sootyyu@gmail.com'   
       })
@@ -106,6 +135,8 @@ const PageBook = () => {
     const updatedUserInfo = getUser()
     delete updatedUserInfo.patientName
     delete updatedUserInfo.patientId
+    delete updatedUserInfo.bpPatientId
+    delete updatedUserInfo.drId
     delete updatedUserInfo.appId
     updatedUserInfo.checkingBookingStatus = true
     setUser(updatedUserInfo)
@@ -113,18 +144,16 @@ const PageBook = () => {
 
   return (
     <Layout>
-      <Content title='Booking appointment'>
+      <Content title='Booking appointment' titleImg={titleImg}>
         <Paper className={classes.root} elevation={3}>
           <Typography variant="h6" align="left" gutterBottom>
             {`For ${patient} with ${appId} for a`}
           </Typography>
           <FormControl className={classes.radio} component="fieldset">
             <FormLabel component="legend">Consultation type</FormLabel>
-            <RadioGroup aria-label="consultation type" name="consultation" value={value} onChange={handleChange}>
-              <FormControlLabel value="standard" control={<Radio />} label={consultationType['standard']} />
-              <FormControlLabel value="video" control={<Radio />} label={consultationType['video']} />
-              <FormControlLabel value="immunisation" control={<Radio />} label={consultationType['immunisation']} />
-              <FormControlLabel value="pap" control={<Radio />} label={consultationType['pap']} />
+            <RadioGroup aria-label="consultation type" name="consultation" value={conTypeIndex} onChange={handleChange}>
+              {consultationTypes.map((item, index) => 
+                <FormControlLabel value={index} control={<Radio />} label={item.label} />)}
             </RadioGroup>
           </FormControl>
         </Paper>

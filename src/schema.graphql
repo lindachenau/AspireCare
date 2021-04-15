@@ -21,7 +21,7 @@ type Patient @model {
   lastname: String!
   dob: String!
   gender: String!
-  bpPatientId: int
+  bpPatientId: int!
   users: [UserMember] @connection(keyName: "byMember", fields: ["id"])
   appointments: [Appointment] @connection(keyName: "appointmentsByPatient", fields: ["id"])
 }
@@ -30,14 +30,9 @@ type Appointment @model
   @key(name: "appointmentsByPatient", fields: ["patientID", "time"]){
   id: String!
   time: String!
-  status: BookingStatus
+  bookedBy: String!
+  canceledBy: String
   patientID: String!
-  bpAppointmentId: int
+  bpAppointmentId: int!
   patient: Patient! @connection(fields: ["patientID"])
 }
-
-type BookingStatus {
-  category: Category
-}
-
-enum Category { booked, arrived, completed, cancelled }

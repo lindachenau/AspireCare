@@ -16,7 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Typography from '@material-ui/core/Typography'
 import Message from '../components/message'
-import { getUser as getAppUser} from './app-user'
+import { getUser as getAppUser} from './auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient, getAppointment }  from '../graphql/queries'
 import { updateAppointment } from '../graphql/mutations'
@@ -104,7 +104,7 @@ const Appointments = () => {
 
   useEffect(() => {
     const getAppointmentsByPatient = async () => {
-      console.log('Patients', patients)
+      // console.log('Patients', patients)
       const patient = patients.length > 0 ? patients[curPatient] : null
       if (patient) {
         try {
@@ -114,7 +114,7 @@ const Appointments = () => {
             return API.graphql(graphqlOperation(getAppointment, {id: id}))
           }))
           .then((results) => {
-            console.log('Appointments', results)
+            // console.log('Appointments', results)
             let appointments = []
             results.forEach(result => {
               //Fulfilled promises 
@@ -159,7 +159,7 @@ const Appointments = () => {
         }
       }))
     } catch (err) {
-      console.log(console.log('Amplify updateAppointment error...: ', err))
+      console.log('Amplify updateAppointment error...: ', err)
     }
     setTriggerFetchPatients(!triggerFetchPatients)
   }  

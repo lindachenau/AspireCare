@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   MDBContainer, MDBNavbar, MDBNavbarNav, MDBNavItem, MDBNavbarToggler, MDBCollapse, 
   MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBIcon, MDBBtn 
@@ -7,11 +7,19 @@ import { Link, navigate } from 'gatsby'
 import CustomNavLink from './custom-link'
 import Logo from "../images/AMCE.png"
 import { dropdownMenu, dropdownItem } from  './navbar.module.scss'
-import { isLoggedIn, logout } from './app-user'
+import { isLoggedIn, logout, getUser } from './auth/app-user'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [loggedIn, setLoggedIn] = useState(isLoggedIn())
+  const [greeting, setGreeting] = useState('')
+
+  useEffect(() => {
+    if (loggedIn) {
+      const userInfo = getUser()
+      setGreeting(`Hello ${userInfo.given_name[0].toUpperCase()}${userInfo.family_name[0].toUpperCase()}`)
+    }
+  }, [])
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen)
@@ -83,7 +91,12 @@ const Navbar = () => {
             <MDBNavItem>
               <MDBDropdown>
                 <MDBDropdownToggle nav caret>
-                  <MDBIcon icon="user" />
+                  {loggedIn ?
+                    // <MDBIcon icon="user-check" />
+                    <span className="mr-2">{greeting}</span>
+                    :
+                    <MDBIcon icon="user-lock" />
+                  }
                 </MDBDropdownToggle>
                 <MDBDropdownMenu className={`dropdown-default ${dropdownMenu}`}>
                   {loggedIn ? 

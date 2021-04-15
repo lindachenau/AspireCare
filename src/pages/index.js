@@ -8,6 +8,9 @@ import Card from '../components/card'
 import { MDBRow } from 'mdbreact'
 import Bulletin from '../components/bulletin'
 import { useServiceData } from '../utils/useServiceData'
+import Amplify from 'aws-amplify'
+import config from '../aws-exports'
+Amplify.configure(config)
 
 const App = () => {
   const { allMarkdownRemark, allFile } = useServiceData()

@@ -9,8 +9,9 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import moment from 'moment'
 import axios from "axios"
 import Message from './message'
-import { isLoggedIn, setUser, getUser } from './app-user'
+import { isLoggedIn, setUser, getUser } from './auth/app-user'
 import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
+import { getAppointmentsURL } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   leftMiddle: {
@@ -34,8 +35,6 @@ const useStyles = makeStyles(theme => ({
   }  }))
 
 const AppBrowser = () => {
-  // const bp_server = process.env.GATSBY_AWS_BP_SIMULATOR
-  const bp_server = process.env.GATSBY_BP_SERVER
   const classes = useStyles()
   const { allMarkdownRemark, allFile } = useAppointmentProfiles()
   const [appData, setAppData] = useState([])
@@ -66,13 +65,20 @@ const AppBrowser = () => {
   })
 
   useEffect(() => {
-    
+    /*
+     * appData:
+     * bpId
+     * appointments {
+     *   date
+     *   slots
+     * }
+     */
     const fetchApps = async () => {
       if (numDays > 0 && doctorList.length > 0) {
         const config = {
           method: 'post',
           headers: {"Content-Type": "application/json"},
-          url: bp_server,
+          url: getAppointmentsURL,
           data: {
             startDate: moment(startDate).format("YYYY-MM-DD"),
             numDays: numDays,
@@ -83,7 +89,7 @@ const AppBrowser = () => {
         const response = await axios(config)
         setAppData(response.data)
         setLoading(false)
-        console.log("Fetching appointments")
+        console.log("Fetching available appointments")
       }
     }
 
@@ -102,11 +108,23 @@ const AppBrowser = () => {
   }, [startDate])
 
   const handlePrev = () => {
-    setStartDate(new Date(startDate.getTime() - 86400000 * numDays))
+    const time = startDate.getTime() - 86400000 * numDays
+    const curTime = new Date().getTime()
+    if (time <= curTime)
+      setStartDate(new Date(curTime))
+    else
+      setStartDate(new Date(time))
   }
 
   const handleNext = () => {
-    setStartDate(new Date(startDate.getTime() + 86400000 * numDays))
+    // Get the last date of the current window
+    let lastDate = appData[0].appointments.slice(-1)[0].date
+    lastDate = new Date(lastDate)
+    let date = new Date(lastDate.getTime() + 86400000)
+    if (date.getDay() == 0) {
+      date = new Date(date.getTime() + 86400000)
+    }
+    setStartDate(date)
   }
   
   const openMessage = appId => {
@@ -115,7 +133,7 @@ const AppBrowser = () => {
     //Save the chosen slot
     const userInfo = {
       ...getUser(),
-      appId: appId,
+      appId: appId
     }
     setUser(userInfo)
     
