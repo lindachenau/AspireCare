@@ -129,8 +129,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             lastname: lastName,
             dob: dob,
             gender: gender,
-            bpPatientId: bpId,
-            createdBy: username
+            bpPatientId: bpId
           }
       }))
       .then(() => {

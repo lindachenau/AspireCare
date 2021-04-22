@@ -65,12 +65,8 @@ export const onCreateUserMember = /* GraphQL */ `
         lastname
         dob
         gender
-        createdBy
         bpPatientId
         users {
-          nextToken
-        }
-        appointments {
           nextToken
         }
       }
@@ -96,12 +92,8 @@ export const onUpdateUserMember = /* GraphQL */ `
         lastname
         dob
         gender
-        createdBy
         bpPatientId
         users {
-          nextToken
-        }
-        appointments {
           nextToken
         }
       }
@@ -127,12 +119,8 @@ export const onDeleteUserMember = /* GraphQL */ `
         lastname
         dob
         gender
-        createdBy
         bpPatientId
         users {
-          nextToken
-        }
-        appointments {
           nextToken
         }
       }
@@ -148,23 +136,12 @@ export const onCreatePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      createdBy
       bpPatientId
       users {
         items {
           id
           userID
           memberID
-        }
-        nextToken
-      }
-      appointments {
-        items {
-          id
-          time
-          patientID
-          bookedBy
-          bpAppointmentId
         }
         nextToken
       }
@@ -180,23 +157,12 @@ export const onUpdatePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      createdBy
       bpPatientId
       users {
         items {
           id
           userID
           memberID
-        }
-        nextToken
-      }
-      appointments {
-        items {
-          id
-          time
-          patientID
-          bookedBy
-          bpAppointmentId
         }
         nextToken
       }
@@ -212,23 +178,12 @@ export const onDeletePatient = /* GraphQL */ `
       lastname
       dob
       gender
-      createdBy
       bpPatientId
       users {
         items {
           id
           userID
           memberID
-        }
-        nextToken
-      }
-      appointments {
-        items {
-          id
-          time
-          patientID
-          bookedBy
-          bpAppointmentId
         }
         nextToken
       }
@@ -240,28 +195,10 @@ export const onCreateAppointment = /* GraphQL */ `
     onCreateAppointment {
       id
       time
-      status {
-        category
-      }
-      patientID
       bookedBy
-      bpAppointmentId
-      patient {
-        id
-        title
-        firstname
-        lastname
-        dob
-        gender
-        createdBy
-        bpPatientId
-        users {
-          nextToken
-        }
-        appointments {
-          nextToken
-        }
-      }
+      canceledBy
+      provider
+      patientID
     }
   }
 `;
@@ -270,28 +207,10 @@ export const onUpdateAppointment = /* GraphQL */ `
     onUpdateAppointment {
       id
       time
-      status {
-        category
-      }
-      patientID
       bookedBy
-      bpAppointmentId
-      patient {
-        id
-        title
-        firstname
-        lastname
-        dob
-        gender
-        createdBy
-        bpPatientId
-        users {
-          nextToken
-        }
-        appointments {
-          nextToken
-        }
-      }
+      canceledBy
+      provider
+      patientID
     }
   }
 `;
@@ -300,28 +219,10 @@ export const onDeleteAppointment = /* GraphQL */ `
     onDeleteAppointment {
       id
       time
-      status {
-        category
-      }
-      patientID
       bookedBy
-      bpAppointmentId
-      patient {
-        id
-        title
-        firstname
-        lastname
-        dob
-        gender
-        createdBy
-        bpPatientId
-        users {
-          nextToken
-        }
-        appointments {
-          nextToken
-        }
-      }
+      canceledBy
+      provider
+      patientID
     }
   }
 `;

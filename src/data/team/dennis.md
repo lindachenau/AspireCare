@@ -11,6 +11,9 @@ qualification1: "FRACGP"
 qualification2: "Certificate of xxx"
 languages: "English, Mandarin"
 availability: "Mon, Tue, Fri"
+consultationGroup: "0"
+terms: "gp"
+emailConfirmation: "gp"
 ---
 
 Kai is a family GP who is devoted to provide holistic care for his patients. His rural GP training experience equipped him with outstanding skills for handling emergency cases. He is accredited to perform surgical procedures for cryotherapy and minor skin lesions.    

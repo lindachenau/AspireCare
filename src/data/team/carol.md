@@ -1,14 +1,18 @@
 ---
 sequence: "6"
 title: "Carol Winston"
-role: "team"
+role: "appointment, team"
 avatar: "dietitian"
+bpid: "17"
 job: "Dietitian"
 image: "carol.jpg"
 school: "UNSW"
 qualification1: "XXX"
 languages: "English"
 availability: "Thur, Sat"
+consultationGroup: "2"
+terms: "dietitian"
+emailConfirmation: "gp"
 ---
 
 Kai is a family GP who is devoted to provide holistic care for his patients. His rural GP training experience equipped him with outstanding skills for handling emergency cases. He is accredited to perform surgical procedures for cryotherapy and minor skin lesions.    

@@ -51,7 +51,6 @@ const Patient = ({
   setTriggerMessage,
   setPatIndexToBeDeleted
 }) => {
-
   const bookAppointment = () => {
     //Save the selected patient
     const userInfo = {
@@ -88,7 +87,7 @@ const Patient = ({
       />
       <ListItemIcon>
         <IconButton edge="end" aria-label="edit" onClick={editExistingPatient}>
-          <EditIcon />
+          <EditIcon/>
         </IconButton>
       </ListItemIcon>
       <ListItemIcon>

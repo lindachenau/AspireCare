@@ -42,23 +42,12 @@ export const getPatient = /* GraphQL */ `
       lastname
       dob
       gender
-      createdBy
       bpPatientId
       users {
         items {
           id
           userID
           memberID
-        }
-        nextToken
-      }
-      appointments {
-        items {
-          id
-          time
-          patientID
-          bookedBy
-          bpAppointmentId
         }
         nextToken
       }
@@ -79,12 +68,8 @@ export const listPatients = /* GraphQL */ `
         lastname
         dob
         gender
-        createdBy
         bpPatientId
         users {
-          nextToken
-        }
-        appointments {
           nextToken
         }
       }
@@ -97,28 +82,10 @@ export const getAppointment = /* GraphQL */ `
     getAppointment(id: $id) {
       id
       time
-      status {
-        category
-      }
-      patientID
       bookedBy
-      bpAppointmentId
-      patient {
-        id
-        title
-        firstname
-        lastname
-        dob
-        gender
-        createdBy
-        bpPatientId
-        users {
-          nextToken
-        }
-        appointments {
-          nextToken
-        }
-      }
+      canceledBy
+      provider
+      patientID
     }
   }
 `;
@@ -132,22 +99,10 @@ export const listAppointments = /* GraphQL */ `
       items {
         id
         time
-        status {
-          category
-        }
-        patientID
         bookedBy
-        bpAppointmentId
-        patient {
-          id
-          title
-          firstname
-          lastname
-          dob
-          gender
-          createdBy
-          bpPatientId
-        }
+        canceledBy
+        provider
+        patientID
       }
       nextToken
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import { navigate } from 'gatsby'
 import Typography from '@material-ui/core/Typography'
 import Layout from '../components/layout'
@@ -18,7 +18,11 @@ import { createAppointment }  from '../graphql/mutations'
 import { addAppointmentURL } from '../utils/booking-api'
 import titleImg from '../images/bg7.jpg'
 import { consultationTypes } from "../utils/bp-codes"
+import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
+import { useEmailConfirmation } from '../utils/useEmailConfirmation'
+import TermsConditions from '../components/terms-and-conditions'
 import axios from "axios"
+import { google, outlook, office365 } from "calendar-link"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,33 +47,38 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PageBook = () => {
+  const { allMarkdownRemark } = useAppointmentProfiles()
+  const doctorTitles = {}
+  const consultationGroups = {}
+  const tcs = {}
+  const emailTemplateTags = {}
+  allMarkdownRemark.edges.forEach(({node}) => {
+    doctorTitles[node.frontmatter.bpid] = node.frontmatter.title
+    consultationGroups[node.frontmatter.bpid] = parseInt(node.frontmatter.consultationGroup)
+    tcs[node.frontmatter.bpid] = node.frontmatter.terms
+    emailTemplateTags[node.frontmatter.bpid] = node.frontmatter.emailConfirmation
+  })
+
+  const emailTemplates = {}
+  const { allMarkdownRemark: emailTemps } = useEmailConfirmation()
+  emailTemps.edges.forEach(({node}) => {
+    emailTemplates[node.frontmatter.emailConfirmation] = node.html
+  })
+
   const [conTypeIndex, setConTypeIndex] = useState(0)
-  const [patient, setPatient] = useState(null)
-  const [patientId, setPatientId] = useState(null)
-  const [bpPatientId, setBpPatientId] = useState(null)
-  const [drId, setDrId] = useState(null)
-  const [appId, setAppId] = useState(null)
-  const [appTime, setAppTime] = useState(null)
-  const [email, setEmail] = useState(null)
+  const userInfo = getUser()
+  const [patientName] = useState(userInfo.patientName)
+  const [appId] = useState(userInfo.appId)
+  const { patientId, bpPatientId, drId, appTime, appDuration, email } = userInfo
+  const [conTypeList] = useState(consultationTypes[consultationGroups[drId]])
   const [triggerMessage, setTriggerMessage] = useState(false)
-  const message = `You have booked ${patient} with ${appId} for a ${consultationTypes[conTypeIndex].label}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`  
+  const [stage, setStage] = useState(0)
   const classes = useStyles()
 
-  useEffect(() => {
-    const userInfo = getUser()
-    setPatient(userInfo.patientName)
-    setPatientId(userInfo.patientId)
-    setBpPatientId(userInfo.bpPatientId)
-    setDrId(userInfo.drId)
-    setAppId(userInfo.appId)
-    setAppTime(userInfo.appTime)
-    setEmail(userInfo.email)
-  }, [])
-
-  const handleChange = (event) => {
-    setConTypeIndex(event.target.value)
-  }  
-
+  const message = useMemo(() => {
+    return `You have booked ${patientName} with ${appId} for a ${conTypeList[conTypeIndex].label}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`
+  }, [patientName, appId, conTypeList, conTypeIndex])
+  
   const addAppointmentToBP = async (aptDate, aptTime, aptType, practitionerID, patientID) => {
     try {
       const config = {
@@ -94,19 +103,16 @@ const PageBook = () => {
 
   const addAppointment = async (username) => {
     try {
-      const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(10), consultationTypes[conTypeIndex].code, drId, bpPatientId)
+      const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(10), conTypeList[conTypeIndex].code, drId, bpPatientId)
       console.log("BP appointment ID", bpAptId)
       
       API.graphql(graphqlOperation(createAppointment, {
         input: {
-          id: appId,
+          id: bpAptId.toString(),
           time: appTime,
           patientID: patientId,
-          status: {
-            category: 'booked'
-          },
           bookedBy: username,
-          bpAppointmentId: bpAptId
+          provider: doctorTitles[drId]
         }
       }))
     } catch (err) {
@@ -114,22 +120,82 @@ const PageBook = () => {
     }
   }
 
-  const book = () => {
-    setTriggerMessage(!triggerMessage)
-    addAppointment(getUser().username)
- 
+  const ConfirmDetails = () => {
+    return (
+      <>
+        <Paper className={classes.root} elevation={3}>
+        <Typography variant="h6" align="left" gutterBottom>
+          {`Booking ${patientName} with ${appId} for a`}
+        </Typography>
+        <FormControl className={classes.radio} component="fieldset">
+          <FormLabel component="legend">Consultation type</FormLabel>
+          <RadioGroup 
+            aria-label="consultation type" 
+            name="consultation" 
+            value={conTypeIndex} 
+            onChange={event => setConTypeIndex(parseInt(event.target.value))}
+          >
+            {conTypeList.map((item, index) => 
+              <FormControlLabel key={index} value={index} control={<Radio />} label={item.label} />)}
+          </RadioGroup>
+        </FormControl>
+        </Paper>
+        <div className={classes.flex} >
+          <div className={classes.grow} />
+          <Button variant='contained' onClick={() => setStage(1)} color="primary">
+              confirm appointment details
+          </Button>
+          <div className={classes.grow} /> 
+        </div>       
+      </>
+    )
+  }
+
+  const emailConfirmation = () => {
+    const event = {
+      title: `Appointment with ${appId}`,
+      description: "Be there!",
+      start: appTime,
+      duration: [appDuration, "m"],
+      location: "2 Hillview Rd, Eastwood NSW 2122"
+    }
+
+    const outlookLink = outlook(event)
+    const googleLink = google(event)
+    const office365Link = office365(event)
+    
+    const calendarLinks = `<p style="font-family: Helvetica, Arial, sans-serif; color: #4bb0c2; font-size: 16px; line-height: 20px; margin: 20px 0 0 0;">
+    Click the links below to add the appointment to your calendar
+    </p>
+    <p style="font-family: Helvetica, Arial, sans-serif; color: #4bb0c2; font-size: 16px; line-height: 20px; margin: 10px 0 0 0;">
+      <a style="color: #4bb0c2" href=${outlookLink}>Outlook.com</a>
+      &nbsp;
+      <a style="color: #4bb0c2" href=${office365Link}>Office 365</a>
+      &nbsp;
+      <a style="color: #4bb0c2" href=${googleLink}>Google</a>
+    </p>`
+
     //send confirmation email
-    const patient = getUser().patientName
     fetch(process.env.GATSBY_DIGITF_EMAIL_SERVER, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         email: email,
-        body: `You have booked ${patient} with ${appId} for a ${consultationTypes[conTypeIndex].label}.`,
-        subject: 'Your booking is confirmed!',
+        body: `<p>You have booked ${patientName} with ${appId} for a ${conTypeList[conTypeIndex].label}</p>.
+        ${emailTemplates[emailTemplateTags[drId]]}
+        ${calendarLinks} <br>
+        This is an automatically generated email. Please DO NOT reply to this email.`,
+        subject: 'Your booking with Aspire Medicare Centre is confirmed!',
         source: 'sootyyu@gmail.com'   
       })
     })
+  }
+
+  const book = () => {
+    setTriggerMessage(!triggerMessage)
+    addAppointment(getUser().username)
+
+    emailConfirmation()
 
     //clear patient and appId
     const updatedUserInfo = getUser()
@@ -145,25 +211,8 @@ const PageBook = () => {
   return (
     <Layout>
       <Content title='Booking appointment' titleImg={titleImg}>
-        <Paper className={classes.root} elevation={3}>
-          <Typography variant="h6" align="left" gutterBottom>
-            {`For ${patient} with ${appId} for a`}
-          </Typography>
-          <FormControl className={classes.radio} component="fieldset">
-            <FormLabel component="legend">Consultation type</FormLabel>
-            <RadioGroup aria-label="consultation type" name="consultation" value={conTypeIndex} onChange={handleChange}>
-              {consultationTypes.map((item, index) => 
-                <FormControlLabel value={index} control={<Radio />} label={item.label} />)}
-            </RadioGroup>
-          </FormControl>
-        </Paper>
-        <div className={classes.flex} >
-          <div className={classes.grow} />
-          <Button variant='contained' onClick={book} color="primary">
-              confirm booking
-          </Button>
-          <div className={classes.grow} /> 
-        </div>       
+        {stage === 0 && <ConfirmDetails/>}
+        {stage === 1 && <TermsConditions terms={tcs[drId]} book={book}/>}
         <Message 
           triggerOpen={triggerMessage} 
           initOpen={false}

@@ -157,7 +157,7 @@ const SignIn = () => {
 
       if (stage === 1) {
         // User updated phone number on UI
-        if (phoneNumber != getAppUser().phone_number) {
+        if (phoneNumber !== getAppUser().phone_number) {
           await updatePhoneNumber()
         }
 
@@ -235,7 +235,7 @@ const SignIn = () => {
           cb={() => navigate("/signup")}
         />        
       </AuthForm>}
-      {stage != 0 && 
+      {stage !== 0 && 
       <AuthForm 
         title="Verify your phone number" 
         instruction= {stage === 1 ? 

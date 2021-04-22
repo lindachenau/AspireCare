@@ -19,6 +19,9 @@ export const useAppointmentProfiles = () => {
                 bpid
                 title
                 job
+                consultationGroup
+                terms
+                emailConfirmation
                 image {
                   id
                 }

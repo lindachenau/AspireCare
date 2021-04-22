@@ -23,10 +23,12 @@ export default function DaySlots({drId, date, slots, setAppId}) {
 
   const handleSlot = (e) => {
     const appTime = e.currentTarget.value
+    const appDuration = slots[parseInt(e.currentTarget.name)].duration
     //Save the chosen slot
     const userInfo = {
       ...getUser(),
       appTime: appTime,
+      appDuration: appDuration,
       drId: drId
     }
     setUser(userInfo)
@@ -42,16 +44,18 @@ export default function DaySlots({drId, date, slots, setAppId}) {
   })
 
   return (
+    // Using index as name in order to access slot duration corresponding to the selected slot
     <MDBCol className={classes.alignVertical}>
-      {slots.map(slot => {
+      {slots.map((slot, index) => {
         return (
           <Button
-            key={slot}
-            value={`${date} ${slot}`}
+            key={index}
+            name={index}
+            value={`${date} ${slot.start}`}
             size="small"
             onClick={handleSlot}
           >
-            {slot}
+            {slot.start}
           </Button>
         )
       })}

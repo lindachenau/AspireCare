@@ -47,6 +47,22 @@ module.exports = {
     {
       resolve: 'gatsby-source-filesystem',
       options: {
+          name: 'terms-and-conditions',
+          path: `${__dirname}/src/data/terms-and-conditions`,
+      },
+    },
+
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+          name: 'email-templates',
+          path: `${__dirname}/src/data/email-templates`,
+      },
+    },
+
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
           name: 'images',
           path: `${__dirname}/src/images`,
       },

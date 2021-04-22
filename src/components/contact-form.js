@@ -141,7 +141,6 @@ export default function ContactForm({theme, triggerOpen, initOpen}) {
               rows="5"
               fullWidth
               variant="outlined"
-              paragraph
               defaultValue={message}
               onChange={(event) => setMessage(event.target.value)}
             />                                  

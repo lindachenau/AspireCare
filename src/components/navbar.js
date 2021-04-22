@@ -19,7 +19,7 @@ const Navbar = () => {
       const userInfo = getUser()
       setGreeting(`Hello ${userInfo.given_name[0].toUpperCase()}${userInfo.family_name[0].toUpperCase()}`)
     }
-  }, [])
+  }, [loggedIn])
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen)

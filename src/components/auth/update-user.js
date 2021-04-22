@@ -122,7 +122,7 @@ const UpdateUser = () => {
             setLoading(false)
 
             // email has changed. Verify it.
-            if (email != userInfo.email) {
+            if (email !== userInfo.email) {
               setStage(1)
             } else {
               alert('Account update successful')

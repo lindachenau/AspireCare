@@ -20,19 +20,16 @@ type Patient @model {
   firstname: String!
   lastname: String!
   dob: String!
-  gender: String!
-  bpPatientId: int!
+  gender: Int!
+  bpPatientId: Int!
   users: [UserMember] @connection(keyName: "byMember", fields: ["id"])
-  appointments: [Appointment] @connection(keyName: "appointmentsByPatient", fields: ["id"])
 }
 
-type Appointment @model 
-  @key(name: "appointmentsByPatient", fields: ["patientID", "time"]){
+type Appointment @model {
   id: String!
   time: String!
   bookedBy: String!
   canceledBy: String
+  provider: String!
   patientID: String!
-  bpAppointmentId: int!
-  patient: Patient! @connection(fields: ["patientID"])
 }

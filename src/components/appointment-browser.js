@@ -121,7 +121,7 @@ const AppBrowser = () => {
     let lastDate = appData[0].appointments.slice(-1)[0].date
     lastDate = new Date(lastDate)
     let date = new Date(lastDate.getTime() + 86400000)
-    if (date.getDay() == 0) {
+    if (date.getDay() === 0) {
       date = new Date(date.getTime() + 86400000)
     }
     setStartDate(date)
