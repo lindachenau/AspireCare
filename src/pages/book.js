@@ -103,7 +103,13 @@ const PageBook = () => {
 
   const addAppointment = async (username) => {
     try {
-      const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(10), conTypeList[conTypeIndex].code, drId, bpPatientId)
+      const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(11), conTypeList[conTypeIndex].code, drId, bpPatientId)
+      // Someone has taken this slot one step ahead
+      if (bpAptId === 0) {
+        alert("Sorry, someone just booked an appointment at the same time before you. Please try another appointment time.")
+        return 0
+      }
+
       console.log("BP appointment ID", bpAptId)
       
       API.graphql(graphqlOperation(createAppointment, {
@@ -115,6 +121,8 @@ const PageBook = () => {
           provider: doctorTitles[drId]
         }
       }))
+
+      return bpAptId
     } catch (err) {
       console.log('Amplify createAppointment error...: ', err)
     }
@@ -191,17 +199,21 @@ const PageBook = () => {
     })
   }
 
-  const book = () => {
+  const book = async () => {
+    const bpAptId = await addAppointment(getUser().username)
+
+    if (bpAptId === 0) {
+      navigate('/appointment-browser')
+      return
+    }
+
     setTriggerMessage(!triggerMessage)
-    addAppointment(getUser().username)
 
     emailConfirmation()
 
     //clear patient and appId
     const updatedUserInfo = getUser()
     delete updatedUserInfo.patientName
-    delete updatedUserInfo.patientId
-    delete updatedUserInfo.bpPatientId
     delete updatedUserInfo.drId
     delete updatedUserInfo.appId
     updatedUserInfo.checkingBookingStatus = true

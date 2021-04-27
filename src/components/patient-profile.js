@@ -20,7 +20,7 @@ import { createPatient, createUserMember } from '../graphql/mutations'
 import { getUser, getPatient } from '../graphql/queries'
 import moment from 'moment'
 import { getUser as getAppUser} from './auth/app-user'
-import { getPatientURL, addPatientURL } from '../utils/booking-api'
+import { getPatientURL, addPatientURL, getNumVisitsFromBP } from '../utils/booking-api'
 import axios from "axios"
 import { patientTitles, patientSexCodes } from "../utils/bp-codes"
 
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function ProfileForm({theme, triggerOpen, initOpen}) {
+export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, doneEdit}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [title, setTitle] = useState(0)
@@ -44,6 +44,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
   const [lastName, setLastName] = useState(null)
   const [dOB, setDOB] = useState(null)
   const [gender, setGender] = useState(0)
+  let bpId
   
   const classes = useStyles(theme)
 
@@ -107,7 +108,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
       console.log('BP_AddPatient error', err)
     }
   }
-
+  
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
     const patientId = `${firstName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${lastName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${dob} ${gender}`
@@ -116,12 +117,13 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
     const dobBP = moment(dob).format("YYYY-MM-DD")
 
     if (!existingPatient.data.getPatient) {
-      let bpId = await getPatientFromBP(lastName, firstName, dobBP)
+      bpId = await getPatientFromBP(lastName, firstName, dobBP)
 
       if (bpId === null)
         bpId = await addPatientToBP(title, firstName, lastName, dobBP, gender)
 
-      API.graphql(graphqlOperation(createPatient, {
+      try {
+        const result = await API.graphql(graphqlOperation(createPatient, {
           input: {
             id: patientId,
             title: title,
@@ -131,18 +133,26 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
             gender: gender,
             bpPatientId: bpId
           }
-      }))
-      .then(() => {
+        }))
+
+        const pat = result.data.createPatient
+        setPatient(`${pat.firstname} ${pat.lastname}`)
+
         API.graphql(graphqlOperation(createUserMember, {
           input: {
             userID: username,
             memberID: patientId
           }
         }))
-      })
-      .catch(err => console.log('Amplify createPatient error...: ', err))
+
+      } catch (err) {
+        console.log('Amplify createPatient error...: ', err)
+      }
     }
     else {
+      const pat = existingPatient.data.getPatient
+      setPatient(`${pat.firstname} ${pat.lastname}`)      
+      bpId = pat.bpPatientId
       //Check if this patient is already under management
       const user = await API.graphql(graphqlOperation(getUser, {id: username}))
       const members = user.data.getUser.patients.items
@@ -165,7 +175,11 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
       }
     }
     
-    //Also create BP patient account here later
+    const numVisits = await getNumVisitsFromBP(bpId)
+    // This patient has visited the clinic before. Not allowed to edit patient info.
+    if (numVisits > 0)
+      doneEdit()
+
     setOpen(false)
   }
 
@@ -190,7 +204,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
                 id: 'title-native-simple',
               }}
             >
-              {patientTitles.map((item, index) => <option value={index}>{item.label}</option>)}              
+              {patientTitles.map((item, index) => <option key={index} value={index}>{item.label}</option>)}              
             </Select>
           </FormControl>          
           <TextField
@@ -237,7 +251,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen}) {
                 id: 'gender-native-simple',
               }}
             >
-              {patientSexCodes.map((item, index) => <option value={index}>{item.label}</option>)}              
+              {patientSexCodes.map((item, index) => <option key={index} value={index}>{item.label}</option>)}              
             </Select>
           </FormControl>                    
         </DialogContent>

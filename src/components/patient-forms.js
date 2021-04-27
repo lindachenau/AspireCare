@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -19,24 +19,25 @@ const useStyles = makeStyles(theme => ({
   }}
 }))
 
-const PatientForms = ({patient}) => {
+const PatientForms = ({patient, setPatient, doneEdit}) => {
   const classes = useStyles()
   const [triggerProfile, setTriggerProfile] = useState(false)
   const [triggerMedicare, setTriggerMedicare] = useState(false)
   const [triggerContact, setTriggerContact] = useState(false)
-  const patientHeading = patient ? `Edit ${patient}'s patient information` : "Create a new patient profile and edit patient information"
-
-  const checkVerified = () => {
-    return false
-  }
+  //A new patient is someone who's never visited Aspire Medical Centre.
+  const patientHeading = patient ? `Edit ${patient}'s patient information` : "Create a patient profile and edit patient information"
 
   const editMedicareInfo = () => {
-    if (!checkVerified())
+    if (!patient)
+      alert('Please create a patient profile first.')
+    else
       setTriggerMedicare(!triggerMedicare)
   }
 
   const editContactInfo = () => {
-    if (!checkVerified())
+    if (!patient)
+      alert('Please create a patient profile first.')
+    else      
       setTriggerContact(!triggerContact)
   }
   
@@ -85,7 +86,7 @@ const PatientForms = ({patient}) => {
           />
         </ListItem>                  
       </List>
-      <PatientProfile triggerOpen={triggerProfile} initOpen={false} />
+      <PatientProfile triggerOpen={triggerProfile} initOpen={false} setPatient={setPatient} doneEdit={doneEdit}/>
       <MedicareForm triggerOpen={triggerMedicare} initOpen={false} />
       <PatientContactForm triggerOpen={triggerContact} initOpen={false} />
     </>

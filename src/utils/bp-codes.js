@@ -1,3 +1,5 @@
+export const appointmentWaitingCode = 2
+
 export const consultationTypes = [
   [
     {

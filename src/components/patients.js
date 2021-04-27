@@ -18,6 +18,7 @@ import { getUser as getAppUser, setUser } from './auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient }  from '../graphql/queries'
 import { deleteUserMember } from '../graphql/mutations'
+import { getNumVisitsFromBP } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,10 +41,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Patient = ({
-  name, 
-  dob, 
-  id,
-  bpPatientId,
+  pat,
   patientIndex, 
   setPatient, 
   setPatStage,
@@ -51,6 +49,9 @@ const Patient = ({
   setTriggerMessage,
   setPatIndexToBeDeleted
 }) => {
+  const { firstname, lastname, dob, id, bpPatientId, numVisits } = pat
+  const name = `${firstname} ${lastname}` 
+
   const bookAppointment = () => {
     //Save the selected patient
     const userInfo = {
@@ -86,7 +87,7 @@ const Patient = ({
         secondary={dob}
       />
       <ListItemIcon>
-        <IconButton edge="end" aria-label="edit" onClick={editExistingPatient}>
+        <IconButton edge="end" aria-label="edit" onClick={editExistingPatient} disabled={numVisits > 0}>
           <EditIcon/>
         </IconButton>
       </ListItemIcon>
@@ -113,7 +114,7 @@ const Legend = () => {
           <EditIcon />
         </ListItemIcon>      
         <ListItemText
-          primary="Edit new patient profile and patient information before the first appointment"
+          primary="Edit new patient profile and patient information before the first appointment. After the first appointment, patient info cannot be edited online for security reason."
         />
       </ListItem> 
       <ListItem>
@@ -158,15 +159,17 @@ const Patients = ({patStage, setPatStage}) => {
             userMemberId: member.id
           })
         })
-        
+
+        let pats = []
+        let bpIds = []
         Promise.allSettled(patientIds.map(id => {
           return API.graphql(graphqlOperation(getPatient, {id: id.patientId}))
         }))
         .then((results) => {
-          let pats = []
           results.forEach(result => {
             if (result.status === 'fulfilled') {
               pats.push(result.value.data.getPatient)
+              bpIds.push(result.value.data.getPatient.bpPatientId)
             }
           })
 
@@ -174,8 +177,18 @@ const Patients = ({patStage, setPatStage}) => {
             pats[index].userMemberId = patientIds[index].userMemberId
           })
 
-          setPatients(pats)
+          // Check whether each patient is a first time patient to determine if patient info is editable.
+          Promise.allSettled(bpIds.map(id => getNumVisitsFromBP(id)))
+          .then((results) => {
+            results.forEach((result, index) => {
+              if (result.status === 'fulfilled') {
+                pats[index].numVisits = result.value
+              }
+            })
+            setPatients(pats)
+          })
         })
+
       } catch (err) {
         console.log('Amplify getUser error...: ', err)
       }
@@ -183,7 +196,7 @@ const Patients = ({patStage, setPatStage}) => {
 
     getPatientsByUser()
 
-  }, [triggerFetchPatients])
+  }, [triggerFetchPatients, patStage])
 
   const doneEdit = () => {
     setTriggerFetchPatients(!triggerFetchPatients)
@@ -219,10 +232,7 @@ const Patients = ({patStage, setPatStage}) => {
           {patients.map((pat, index) => (
             <Patient 
               key={pat.id} 
-              name={`${pat.firstname} ${pat.lastname}`} 
-              dob={pat.dob} 
-              id={pat.id}
-              bpPatientId={pat.bpPatientId}
+              pat={pat}
               patientIndex={index}
               setPatient={setPatient}
               setPatStage={setPatStage}
@@ -248,7 +258,7 @@ const Patients = ({patStage, setPatStage}) => {
       </Paper>}
       {patStage === 1 && 
       <>
-        <PatientForms patient={patient}/>
+        <PatientForms patient={patient} setPatient={setPatient} doneEdit={doneEdit}/>
         <div className={classes.flex}>
           <div className={classes.grow} />
           <Button 

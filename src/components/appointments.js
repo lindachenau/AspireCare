@@ -21,7 +21,8 @@ import { getUser as getAppUser} from './auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient }  from '../graphql/queries'
 import { updateAppointment } from '../graphql/mutations'
-import { getPatientAptsURL, cancelAppointmentURL, arriveAppointmentURL, appointmentWaitingCode } from '../utils/booking-api'
+import { getPatientAptsURL, cancelAppointmentURL, arriveAppointmentURL } from '../utils/booking-api'
+import { appointmentWaitingCode } from '../utils/bp-codes'
 import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({

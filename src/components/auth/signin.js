@@ -174,13 +174,12 @@ const SignIn = () => {
         setLoading(false)
       } else {
         cognitoUser = await Auth.currentAuthenticatedUser()
-        cognitoUser.verifyAttribute('phone_number', authCode, function(err, result) {
-          setLoading(false)
-          if (err) {
+        cognitoUser.verifyAttribute('phone_number', authCode, {
+          onSuccess: () => {console.log('Code verified successfully')},
+          onFailure: function(err) {
             setError(err.message || JSON.stringify(err))
-            return
-          }
-        })
+          }}
+        )
         alert('Phone number was verified successfully')
         navigate('/my-account')
       }
@@ -267,6 +266,9 @@ const SignIn = () => {
           variant="contained"
           fullWidth
           disabled={loading}
+          style={{
+            marginBottom: 30
+          }}
         >        
           {loading ? null : (stage === 1 ? 'Send Code' : 'Confirm')}
           {loading && (
