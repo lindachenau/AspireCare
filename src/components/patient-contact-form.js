@@ -21,10 +21,11 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function PatientContactForm({theme, triggerOpen, initOpen}) {
+export default function PatientContactForm({theme, triggerOpen, initOpen, saveContacts, patientInfo}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [address, setAddress] = useState('')
+  const [email, setEmail] = useState('')
   const [mobile, setMobile] = useState('')
   const [homeNumber, setHomeNumber] = useState('')
   const [workNumber, setWorkNumber] = useState('')
@@ -41,11 +42,42 @@ export default function PatientContactForm({theme, triggerOpen, initOpen}) {
     }
   }, [triggerOpen, initOpen])
 
+  useEffect(() => {
+    setAddress(`${patientInfo.address1}, ${patientInfo.city} ${patientInfo.postcode}`)
+    setEmail(patientInfo.email)
+    setMobile(patientInfo.mobilePhone)
+    setHomeNumber(patientInfo.homePhone)
+    setWorkNumber(patientInfo.workPhone)
+  }, [patientInfo])
+
   const onChangeLocation = address => {
     setAddress(address.replace(', Australia', ''))
   }
 
+  const parseAddress = (address) => {
+    const comma = address.indexOf(',')
+    let address1 = comma === -1 ? address : address.substring(0, comma)
+    const stateList = ['NSW', 'QLD', 'VIC', 'WA', 'NT', 'TAS', 'SA', 'ACT', 'JBT']
+    const states = stateList.filter(state => address.includes(state))
+    let city = ""
+    let postcode = ""
+
+    if (states.length === 1) {
+      const state = states[0]
+      const statePos = address.indexOf(state)
+      city = address.substring(comma + 1, statePos).trim()
+      postcode = address.substring(statePos + state.length).trim()
+    } else {
+      // parsing failed. Just save everything to address1
+      address1 = address
+    }
+
+    return {address1, city, postcode}
+  }
+
   const handleSave = () => {
+    const {address1, city, postcode} = parseAddress(address)
+    saveContacts(patientInfo.patientID, homeNumber, workNumber, mobile, address1, city, postcode, email)
     setOpen(false)
   }
 
@@ -56,7 +88,7 @@ export default function PatientContactForm({theme, triggerOpen, initOpen}) {
           <CloseIcon />
         </IconButton>               
         <DialogContent>
-          <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Address & Contact</h3>
+          <h3 className="pt-3 pb-2 text-center h3-responsive font-weight-bold" >Address, Contact & Email</h3>
           <LocationSearchInput
               address={address} 
               changeAddr={onChangeLocation}
@@ -69,6 +101,14 @@ export default function PatientContactForm({theme, triggerOpen, initOpen}) {
             fullWidth
             defaultValue={mobile}
             onChange={(event) => setMobile(event.target.value.trim())}
+          />
+          <TextField
+            margin="dense"
+            label="email"
+            type="email"
+            fullWidth
+            defaultValue={email}
+            onChange={(event) => setEmail(event.target.value.trim())}
           />
           <TextField
             margin="dense"

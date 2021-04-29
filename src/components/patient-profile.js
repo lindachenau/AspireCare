@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, doneEdit}) {
+export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, doneEdit, setBpId}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [title, setTitle] = useState(0)
@@ -175,12 +175,17 @@ export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, d
       }
     }
     
-    const numVisits = await getNumVisitsFromBP(bpId)
-    // This patient has visited the clinic before. Not allowed to edit patient info.
-    if (numVisits > 0)
-      doneEdit()
+    // Save BP patient ID for updating medicare, contact and pension info
+    setBpId(bpId)
 
     setOpen(false)
+
+    const numVisits = await getNumVisitsFromBP(bpId)
+    // This patient has visited the clinic before. Not allowed to edit patient info.
+    if (numVisits > 0) {
+      alert(`${firstName} ${lastName} is our existing patient. No need to fill in other patient information.`)
+      doneEdit()
+    }
   }
 
   return (
@@ -204,7 +209,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, d
                 id: 'title-native-simple',
               }}
             >
-              {patientTitles.map((item, index) => <option key={index} value={index}>{item.label}</option>)}              
+              {patientTitles.map((item, index) => <option key={index} value={item.code}>{item.label}</option>)}              
             </Select>
           </FormControl>          
           <TextField
@@ -251,7 +256,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, d
                 id: 'gender-native-simple',
               }}
             >
-              {patientSexCodes.map((item, index) => <option key={index} value={index}>{item.label}</option>)}              
+              {patientSexCodes.map((item, index) => <option key={index} value={item.code}>{item.label}</option>)}              
             </Select>
           </FormControl>                    
         </DialogContent>

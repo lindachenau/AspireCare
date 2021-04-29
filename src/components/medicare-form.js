@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import NumberFormat from 'react-number-format'
+import { monthExpiry } from '../utils/date-formatter'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -21,11 +22,12 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function MedicareForm({theme, triggerOpen, initOpen}) {
+export default function MedicareForm({theme, triggerOpen, initOpen, saveMedicare, patientInfo}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
-  const [medicareNo, setMedicareNo] = useState("")
-  const [iRN, setIRN] = useState("")
+  const [medicareNo, setMedicareNo] = useState('')
+  const [iRN, setIRN] = useState('')
+  const [expiry, setExpiry] = useState('')
   
   const classes = useStyles(theme)
 
@@ -39,7 +41,14 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
     }
   }, [triggerOpen, initOpen])
 
+  useEffect(() => {
+    setMedicareNo(patientInfo.medicareNo)
+    setIRN(patientInfo.medicareLineNo)
+    setExpiry(patientInfo.medicareExpiry)
+  }, [patientInfo])
+
   const handleSave = () => {
+    saveMedicare(patientInfo.patientID, medicareNo.replace(/ /g, ""), iRN, expiry)
     setOpen(false)
   }
 
@@ -77,6 +86,20 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
               mask="_"
             />
           </div>
+          <div className="form-group">
+            <InputLabel>Expiry*</InputLabel>
+            <NumberFormat
+              placeholder="MM/YYYY"
+              onChange={(event) => setExpiry(event.target.value)}
+              name="expiry"
+              value={expiry}
+              type="tel"
+              className="form-control"
+              format={monthExpiry}
+              mask="_"
+
+            />
+          </div>
         </DialogContent>
         <DialogActions className={classes.button}>
           <Button 
@@ -84,7 +107,7 @@ export default function MedicareForm({theme, triggerOpen, initOpen}) {
             onClick={handleSave} 
             color="primary" 
             fullWidth
-            disabled={!(medicareNo && iRN)}
+            disabled={!(medicareNo && iRN && expiry)}
           >
             Save
           </Button>

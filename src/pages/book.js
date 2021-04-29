@@ -214,6 +214,7 @@ const PageBook = () => {
     //clear patient and appId
     const updatedUserInfo = getUser()
     delete updatedUserInfo.patientName
+    delete updatedUserInfo.patientId
     delete updatedUserInfo.drId
     delete updatedUserInfo.appId
     updatedUserInfo.checkingBookingStatus = true

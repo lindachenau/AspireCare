@@ -78,3 +78,22 @@ export const patientSexCodes = [
     code: 3
   }
 ]
+
+export const pensionCodes = [
+  {
+    label: " ",
+    code: 0
+  },
+  {
+    label: "Pensioner Concession Card",
+    code: 1
+  },
+  {
+    label: "Health Care Card",
+    code: 3
+  },
+  {
+    label: "Commonwealth Seniors Health Card",
+    code: 4
+  }
+]

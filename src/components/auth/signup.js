@@ -73,14 +73,14 @@ const SignUp = () => {
           required
           handleUpdate={(event) => setFirstname(event.target.value.trim())}
           textInput={firstname}
-          autoComplete="firstname"
+          autoComplete="new-password"
           placeholder="firstname"
         />
         <TextInput
           required
           handleUpdate={(event) => setSurname(event.target.value.trim())}
           textInput={surname}
-          autoComplete="surname"
+          autoComplete="new-password"
           placeholder="surname"
         />
         <Email

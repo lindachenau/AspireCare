@@ -8,6 +8,12 @@ export const getPatientURL = `${process.env.GATSBY_BP_SERVER}/get-patient`
 export const addPatientURL = `${process.env.GATSBY_BP_SERVER}/add-patient`
 export const getPatientAptsURL = `${process.env.GATSBY_BP_SERVER}/get-patientapts`
 export const getNumVisitsURL = `${process.env.GATSBY_BP_SERVER}/get-numvisits`
+export const getPatientInfoURL = `${process.env.GATSBY_BP_SERVER}/get-patientinfo`
+export const updatePatientMedicareURL = `${process.env.GATSBY_BP_SERVER}/update-medicare`
+export const updatePatientPensionURL = `${process.env.GATSBY_BP_SERVER}/update-pension`
+export const updatePatientContactsURL = `${process.env.GATSBY_BP_SERVER}/update-contacts`
+export const updatePatientAddressURL = `${process.env.GATSBY_BP_SERVER}/update-address`
+export const updatePatientEmailURL = `${process.env.GATSBY_BP_SERVER}/update-email`
 
 export const getNumVisitsFromBP = async (bpPatientId) => {
   try {

@@ -44,6 +44,7 @@ const Patient = ({
   pat,
   patientIndex, 
   setPatient, 
+  setBpId,
   setPatStage,
   triggerMessage,
   setTriggerMessage,
@@ -72,6 +73,7 @@ const Patient = ({
 
   const editExistingPatient = () => {
     setPatient(name)
+    setBpId(bpPatientId)
     setPatStage(1)
   }
 
@@ -144,6 +146,7 @@ const Patients = ({patStage, setPatStage}) => {
   const [triggerFetchPatients, setTriggerFetchPatients] = useState(false)
   const [triggerMessage, setTriggerMessage] = useState(false)
   const [patIndexToBeDeleted, setPatIndexToBeDeleted] = useState(null)
+  const [bpId, setBpId] = useState(null)
   const classes = useStyles()
 
   useEffect(() => {
@@ -235,6 +238,7 @@ const Patients = ({patStage, setPatStage}) => {
               pat={pat}
               patientIndex={index}
               setPatient={setPatient}
+              setBpId={setBpId}
               setPatStage={setPatStage}
               triggerMessage={triggerMessage}
               setTriggerMessage={setTriggerMessage}
@@ -256,22 +260,7 @@ const Patients = ({patStage, setPatStage}) => {
           disableClose={false}
         />                             
       </Paper>}
-      {patStage === 1 && 
-      <>
-        <PatientForms patient={patient} setPatient={setPatient} doneEdit={doneEdit}/>
-        <div className={classes.flex}>
-          <div className={classes.grow} />
-          <Button 
-            variant="contained" 
-            onClick={doneEdit} 
-            color="primary"
-            aria-label="done with patient forms"
-            startIcon={<EditIcon />}
-          >
-            Done
-          </Button>
-        </div>
-      </>}
+      {patStage === 1 && <PatientForms patient={patient} setPatient={setPatient} doneEdit={doneEdit} bpId={bpId} setBpId={setBpId}/>}
     </>
   )
 }
