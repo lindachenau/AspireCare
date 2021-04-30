@@ -8,6 +8,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import LocationSearchInput from './location-search-input'
+import { saveContacts } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function PatientContactForm({theme, triggerOpen, initOpen, saveContacts, patientInfo}) {
+export default function PatientContactForm({theme, triggerOpen, initOpen, patientInfo}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [address, setAddress] = useState('')

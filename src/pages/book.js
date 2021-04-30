@@ -15,13 +15,12 @@ import Message from '../components/message'
 import { getUser, setUser } from '../components/auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { createAppointment }  from '../graphql/mutations'
-import { addAppointmentURL } from '../utils/booking-api'
+import { addAppointmentToBP } from '../utils/booking-api'
 import titleImg from '../images/bg7.jpg'
 import { consultationTypes } from "../utils/bp-codes"
 import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
 import { useEmailConfirmation } from '../utils/useEmailConfirmation'
 import TermsConditions from '../components/terms-and-conditions'
-import axios from "axios"
 import { google, outlook, office365 } from "calendar-link"
 
 const useStyles = makeStyles(theme => ({
@@ -79,28 +78,6 @@ const PageBook = () => {
     return `You have booked ${patientName} with ${appId} for a ${conTypeList[conTypeIndex].label}. An email has been sent to you for confirmation. If you don't receive it in a few seconds, please check your Spam folder.`
   }, [patientName, appId, conTypeList, conTypeIndex])
   
-  const addAppointmentToBP = async (aptDate, aptTime, aptType, practitionerID, patientID) => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: addAppointmentURL,
-        data: {
-          aptDate, 
-          aptTime, 
-          aptType, 
-          practitionerID, 
-          patientID
-        }
-      }
-      const result = await axios(config)
-
-      return result.data
-    } catch(err) {
-      console.log('BP_AddAppointment error', err)
-    }
-  }
-
   const addAppointment = async (username) => {
     try {
       const bpAptId = await addAppointmentToBP(appTime.substring(0, 10), appTime.substring(11), conTypeList[conTypeIndex].code, drId, bpPatientId)

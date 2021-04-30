@@ -7,11 +7,10 @@ import IconButton from '@material-ui/core/Button'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import moment from 'moment'
-import axios from "axios"
 import Message from './message'
 import { isLoggedIn, setUser, getUser } from './auth/app-user'
 import { useAppointmentProfiles } from '../utils/useAppointmentProfiles'
-import { getAppointmentsURL } from '../utils/booking-api'
+import { fetchApps } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   leftMiddle: {
@@ -73,27 +72,7 @@ const AppBrowser = () => {
      *   slots
      * }
      */
-    const fetchApps = async () => {
-      if (numDays > 0 && doctorList.length > 0) {
-        const config = {
-          method: 'post',
-          headers: {"Content-Type": "application/json"},
-          url: getAppointmentsURL,
-          data: {
-            startDate: moment(startDate).format("YYYY-MM-DD"),
-            numDays: numDays,
-            userList: doctorList
-          }
-        }
-        setLoading(true)
-        const response = await axios(config)
-        setAppData(response.data)
-        setLoading(false)
-        console.log("Fetching available appointments")
-      }
-    }
-
-    fetchApps()
+    fetchApps(startDate, numDays, doctorList, setLoading, setAppData)
   // Do not include doctorList in the dependency list. It caused firing fetchApps indefinitely even when it is derived from another useEffect with [] dependency.
   }, [startDate, numDays])
 

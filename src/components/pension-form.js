@@ -17,6 +17,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers'
 import { pensionCodes } from "../utils/bp-codes"
+import { savePension } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function PensionForm({theme, triggerOpen, initOpen, savePension, patientInfo}) {
+export default function PensionForm({theme, triggerOpen, initOpen, patientInfo}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [pensionCode, setPensionCode] = useState(0)

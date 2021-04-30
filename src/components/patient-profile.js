@@ -20,8 +20,7 @@ import { createPatient, createUserMember } from '../graphql/mutations'
 import { getUser, getPatient } from '../graphql/queries'
 import moment from 'moment'
 import { getUser as getAppUser} from './auth/app-user'
-import { getPatientURL, addPatientURL, getNumVisitsFromBP } from '../utils/booking-api'
-import axios from "axios"
+import { getPatientFromBP, addPatientToBP, getNumVisitsFromBP } from '../utils/booking-api'
 import { patientTitles, patientSexCodes } from "../utils/bp-codes"
 
 const useStyles = makeStyles(theme => ({
@@ -57,58 +56,7 @@ export default function ProfileForm({theme, triggerOpen, initOpen, setPatient, d
       setOpen(initOpen)
     }
   }, [triggerOpen, initOpen])
-
-  const getPatientFromBP = async (surname, firstname, dob) => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: getPatientURL,
-        data: {
-          surname: surname,
-          dob: dob
-        }
-      }
-      const result = await axios(config)
-      const patList = result.data
-
-      let id = null
-      let normalisedName = firstname.toUpperCase().replace(/-| /g,'')
-      if (patList.length > 0) {
-        patList.forEach(element => {
-          if (normalisedName === element.firstname.toUpperCase().replace(/-| /g,''))
-            id = element.id
-        })
-      }
-
-      return id
-    } catch(err) {
-      console.log('BP_GetPatientByPartSurnameDOB error', err)
-    }
-  }
-
-  const addPatientToBP = async (titleCode, firstname, surname, dob, sexCode) => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: addPatientURL,
-        data: {
-          titleCode,
-          firstname,
-          surname,
-          dob,
-          sexCode
-        }
-      }
-      const result = await axios(config)
-
-      return result.data
-    } catch(err) {
-      console.log('BP_AddPatient error', err)
-    }
-  }
-  
+ 
   const handleSave = async () => {
     const dob = moment(dOB).format("YYYY-MM-DD")
     const patientId = `${firstName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${lastName.replace(/\s/g,'').replace(/\\-/g,'').toUpperCase()} ${dob} ${gender}`

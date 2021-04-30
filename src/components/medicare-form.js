@@ -9,6 +9,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import NumberFormat from 'react-number-format'
 import { monthExpiry } from '../utils/date-formatter'
+import { saveMedicare } from '../utils/booking-api'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   }  
 }))
 
-export default function MedicareForm({theme, triggerOpen, initOpen, saveMedicare, patientInfo}) {
+export default function MedicareForm({theme, triggerOpen, initOpen, patientInfo}) {
   const [open, setOpen] = useState(false)
   const didMountRef = useRef(false)
   const [medicareNo, setMedicareNo] = useState('')

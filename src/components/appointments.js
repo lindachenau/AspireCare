@@ -21,9 +21,8 @@ import { getUser as getAppUser} from './auth/app-user'
 import { API, graphqlOperation } from 'aws-amplify'
 import { getUser, getPatient }  from '../graphql/queries'
 import { updateAppointment } from '../graphql/mutations'
-import { getPatientAptsURL, cancelAppointmentURL, arriveAppointmentURL } from '../utils/booking-api'
+import { getPatientAptsFromBP, cancelBPAppointment, confirmCheckin } from '../utils/booking-api'
 import { appointmentWaitingCode } from '../utils/bp-codes'
-import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -168,24 +167,6 @@ const Appointments = () => {
 
   }, [username])  
 
-  const getPatientAptsFromBP = async (patientID) => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: getPatientAptsURL,
-        data: {
-          patientID
-        }
-      }
-      const result = await axios(config)
-
-      return result.data
-    } catch(err) {
-      console.log('BP_AddAppointment error', err)
-    }
-  }
-
   useEffect(() => {
     const getAppointmentsByPatient = async () => {
       // console.log('Patients', patients)
@@ -216,24 +197,6 @@ const Appointments = () => {
 
   }, [patients, curPatient, triggerFetchPatients, appointmentStatus] )
 
-  const cancelBPAppointment = async (aptID) => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: cancelAppointmentURL,
-        data: {
-          aptID
-        }
-      }
-      const result = await axios(config)
-
-      return result.data
-    } catch(err) {
-      console.log('BP_CancelAppointment error', err)
-    }
-  }  
-
   const confirmCancelling = async () => {
     try {
       cancelBPAppointment(aptId)
@@ -247,24 +210,6 @@ const Appointments = () => {
       console.log('Amplify updateAppointment error...: ', err)
     }
     setTriggerFetchPatients(!triggerFetchPatients)
-  }
-
-  const confirmCheckin = async () => {
-    try {
-      const config = {
-        method: 'post',
-        headers: {"Content-Type": "application/json"},
-        url: arriveAppointmentURL,
-        data: {
-          aptID : aptId
-        }
-      }
-      const result = await axios(config)
-
-      return result.data
-    } catch(err) {
-      console.log('BP_ArriveAppointment error', err)
-    }
   }
 
   return (
@@ -330,7 +275,7 @@ const Appointments = () => {
         initOpen={false}
         message={checkinMessage}
         action="confirm"
-        cb={confirmCheckin}
+        cb={(aptId) => confirmCheckin(aptId)}
       />              
     </Paper>
   )
